@@ -315,11 +315,9 @@
             <!-- End Filter Bar -->
             <!-- Start Best Seller -->
             <section class="lattest-product-area pb-40 category-list">
-                <div class="row">
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card-Paket">
-
-                        </div>
+                <div class="row card-paket-container">
+                    <div class="col-lg-4 col-md-6 card-paket-template" style="display: none;">
+                        @include('components.card-paket')
                     </div>
                 </div>
             </section>
@@ -335,52 +333,50 @@
             const formatRupiah = (nilai) => {
                 return "Rp " + nilai.toLocaleString('id-ID');
             }
+            
 
-            $.ajax({
-                type: "GET",
-                url: "{{ url('api/v1/packages/') }}",
-                dataType: "json",
-                success: function(response) {
-                    console.log(response);
+            $(document).ready(function() {
+    $.ajax({
+        type: "GET",
+        url: "{{ url('api/v1/packages/') }}",
+        dataType: "json",
+        success: function(response) {
+            console.log(response);
 
-                    // Kosongkan kontainer sebelum menambahkan data
-                    $(".card-Paket").empty();
+            // Kosongkan kontainer sebelum menambahkan data
+            $(".card-Paket").empty();
 
-                    if (response.code === 200) {
-                        $.each(response.data, function(index, data) {
-                            console.log("Data:",
-                            data); // Tambahkan console.log untuk memeriksa data
+            if (response.code === 200) {
+                $.each(response.data, function(index, data) {
+                    console.log("Data:", data); // Tambahkan console.log untuk memeriksa data
+                    // Cloning card-paket template
+                    const card = $('.card-paket-template').clone();
 
-                            const html = `
-                        
-                            <div class="single-product">
-                                <img class="img-fluid" src="{{ asset('uploads/packages') }}/${data.gmb_paket}" alt="">
-                                <div class="d-flex flex-row gap-2 align-items-center p-2">
-        <img src="{{ asset('uploads/wopal_profile') }}/${data.wopal.img_wopal}" alt="profile" class="rounded-circle" style="width: 50px; height: 50px;">
-    </div>
-                                <div class="product-details">
-                                    <h6>${data.wopal.nama_wopal}</h6>
-                                    <h6>${data.nama_paket}</h6>
-                                    <p>${data.deskrisi}</p>
-                                    <div class="price">
-                                        <h6>${formatRupiah(data.harga)}</h6>
-                                    </div>
-                                </div>
-                            </div>
-                    `;
+                            // Mengisi data ke dalam template
+                            card.find('.namaPak').text(data.nama_paket);
+                            card.find('.NamaWopal').text(data.wopal.nama_wopal);
+                            card.find('#gmbPaket').attr('src', 'uploads/packages/' + data.gmb_paket);
+                            card.find('#profileWopal').attr('src', 'uploads/wopal_profile/' + data.wopal.img_wopal);
+                            card.find('.harga').text(formatRupiah(data.harga));
+                            card.find('.deskrip').text(data.deskrisi);
+                            card.find('#link').attr('href', '/detail-produk/' + data.id);
 
-                            // Tambahkan elemen HTML ke dalam kontainer
-                            $(".card-Paket").append(html);
-                        });
-                    } else {
-                        console.error("Failed to get data: ", response.message);
-                    }
+                            // Memasukkan card yang sudah diisi ke dalam kontainer
+                            $('.card-paket-container').append(card.removeClass('card-paket-template').show());
 
-                },
-                error: function(error) {
-                    console.log("Failed to get data from the server", error);
-                }
-            });
+                    // Tambahkan elemen HTML ke dalam kontainer
+                    // $(".card-Paket").append(html);
+                });
+            } else {
+                console.error("Failed to get data: ", response.message);
+            }
+        },
+        error: function(error) {
+            console.log("Failed to get data from the server", error);
+        }
+    });
+});
+
 
         });
     </script>

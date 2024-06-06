@@ -1,32 +1,20 @@
-<div class="col-lg-4 col-md-6">
-    <div class="single-product">
-        <img class="img-fluid" src="https://source.unsplash.com/random/1920x1080" alt="">
-        <div class="product-details">
-            <h6>addidas New Hammer sole
-                for Sports person</h6>
+<div class="single-product card shadow" style="border-radius: 15px;">
+    <a href="/detail-produk" id="link">
+        <img class="img-fluid" src="" alt="" id="gmbPaket">
+        <div class="d-flex flex-row align-items-center pl-3">
+            <img src="" alt="profile" class="rounded-circle" id="profileWopal" style="width: 50px; height: 50px; object-fit: cover;">
+            <h4 class="NamaWopal pl-3"></h4>
+        </div>
+        <div class="product-details pl-4">
+            <h5 class="namaPak"></h5>
+            <p class="deskrip"></p>
             <div class="price">
-                <h6>$150.00</h6>
-                <h6 class="l-through">$210.00</h6>
-            </div>
-            <div class="prd-bottom">
-
-                <a href="" class="social-info">
-                    <span class="ti-bag"></span>
-                    <p class="hover-text">add to bag</p>
-                </a>
-                <a href="" class="social-info">
-                    <span class="lnr lnr-heart"></span>
-                    <p class="hover-text">Wishlist</p>
-                </a>
-                <a href="" class="social-info">
-                    <span class="lnr lnr-sync"></span>
-                    <p class="hover-text">compare</p>
-                </a>
-                <a href="" class="social-info">
-                    <span class="lnr lnr-move"></span>
-                    <p class="hover-text">view more</p>
-                </a>
+                <h6 class="harga">00000</h6>
             </div>
         </div>
-    </div>
+        <div class="d-flex justify-content-center mt-3 mb-3">
+            <button class="btn primary-btn">Pesan</button>
+        </div>
+    </a>
+    <!-- Tombol pesan -->
 </div>
