@@ -10,6 +10,11 @@
 .no-padding {
   padding: 0; }
 
+  .single-product img {
+    width: 200px; /* Lebar gambar sesuai kebutuhan Anda */
+    height: auto; /* Tinggi otomatis disesuaikan */
+}
+
   .frame-circle {
     width: 200px; /* Set a fixed width for the frame */
     height: 200px; /* Set a fixed height for the frame */

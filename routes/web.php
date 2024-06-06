@@ -64,3 +64,11 @@ Route::get('/detail-produk', function () {
 Route::get('/detail-WO', function () {
     return view('web/detailWo');
 });
+
+Route::get('/detail-produk/{parameter}', function ($parameter) {
+    if (is_numeric($parameter)) {
+        return view('web.detailproduk', ['parameter' => $parameter]);
+    } else {
+        return view('web.notFound');
+    }
+});
