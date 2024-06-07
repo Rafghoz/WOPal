@@ -64,7 +64,7 @@ class PackagesController extends Controller
     
     public function getDataPacketByWO($id_wedding)
     {
-        $data = $this->packagesModel::where('id_wedding', $id_wedding)->get();
+        $data = $this->packagesModel::with('wopal')->where('id_wedding', $id_wedding)->get();
         if (!$data) {
             return response()->json([
                     'code' => 404,
