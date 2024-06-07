@@ -39,7 +39,7 @@ Route::prefix('v1/packages')->controller(PackagesController::class)->group(funct
     Route::get('/get/{id}', 'getDataById');
     Route::get('/get/wo', 'getAllDataByWO');
     Route::post('/update/{id}', 'updateData');
-    Route::get('/get/wo/{id_wo}', 'getDataPacketByWO');
+    Route::get('/get/wo/{id_wedding}', 'getDataPacketByWO');
     Route::delete('/delete/{id}', 'deleteData');
 });
 Route::prefix('v1/bookings')->controller(BookingController::class)->group(function () {

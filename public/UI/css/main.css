@@ -5681,68 +5681,21 @@ label {
 
 /*============ End Blog Single Styles  =============*/
 /*============== contact_area css ================*/
-.mapBox {
-  height: 420px;
-  margin-top: 80px;
-  margin-bottom: 100px; }
+.contact-info {
+  display: flex;
+  gap: 20px; /* Adjust the gap as needed */
+  flex-wrap: wrap; /* This will allow the items to wrap on smaller screens */
+}
 
-.contact_info .info_item {
-  position: relative;
-  padding-left: 45px; }
-  .contact_info .info_item i {
-    position: absolute;
-    left: 0;
-    top: 0;
-    font-size: 20px;
-    line-height: 24px;
-    color: #ffba00;
-    font-weight: 600; }
-  .contact_info .info_item h6 {
-    font-size: 16px;
-    line-height: 24px;
-    color: "Roboto", sans-serif;
-    font-weight: bold;
-    margin-bottom: 0px;
-    color: #222222; }
-    .contact_info .info_item h6 a {
-      color: #222222; }
-  .contact_info .info_item p {
-    font-size: 14px;
-    line-height: 24px;
-    padding: 2px 0px; }
+.contact-info p {
+  margin: 0;
+  display: flex;
+  align-items: center; /* Vertically centers the text and icon */
+}
 
-.contact_form .form-group {
-  margin-bottom: 10px; }
-  .contact_form .form-group .form-control {
-    font-size: 13px;
-    line-height: 26px;
-    color: #999;
-    border: 1px solid #eeeeee;
-    font-family: "Roboto", sans-serif;
-    border-radius: 0px;
-    padding-left: 20px; }
-    .contact_form .form-group .form-control:focus {
-      box-shadow: none;
-      outline: none; }
-    .contact_form .form-group .form-control.placeholder {
-      color: #999; }
-    .contact_form .form-group .form-control:-moz-placeholder {
-      color: #999; }
-    .contact_form .form-group .form-control::-moz-placeholder {
-      color: #999; }
-    .contact_form .form-group .form-control::-webkit-input-placeholder {
-      color: #999; }
-  .contact_form .form-group textarea {
-    resize: none; }
-    .contact_form .form-group textarea.form-control {
-      height: 134px; }
-.contact_form .primary-btn {
-  background: #ffba00;
-  color: #fff;
-  margin-top: 20px;
-  border: none;
-  border-radius: 0; }
-
+.contact-info i {
+  margin-left: 10px; /* Space between text and icon */
+}
 /* Contact Success and error Area css
 ============================================================================================ */
 .modal-message .modal-dialog {
