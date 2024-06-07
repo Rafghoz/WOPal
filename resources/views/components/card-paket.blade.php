@@ -1,4 +1,4 @@
-<div class="single-product card shadow" style="border-radius: 15px;">
+<div class="single-product">
     <a href="/detail-produk" id="link">
         <img class="img-fluid" src="" alt="" id="gmbPaket">
         <div class="d-flex flex-row align-items-center pl-3">
@@ -12,7 +12,7 @@
                 <h6 class="harga">00000</h6>
             </div>
         </div>
-        <div class="d-flex justify-content-center mt-3 mb-3">
+        <div class="d-flex justify-content-center">
             <button class="btn primary-btn">Pesan</button>
         </div>
     </a>

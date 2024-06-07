@@ -58,11 +58,17 @@ Route::get('/login', function () {
 Route::get('/registrasi', function () {
     return view('web/Registrasi');
 });
-Route::get('/detail-produk', function () {
-    return view('web/detailproduk');
-});
+
 Route::get('/detail-WO', function () {
     return view('web/detailWo');
+});
+
+Route::get('/detail-WO/{parameter}', function ($parameter) {
+    if (is_numeric($parameter)) {
+        return view('web.detailWo', ['parameter' => $parameter]);
+    } else {
+        return view('web.notFound');
+    }
 });
 
 Route::get('/detail-produk/{parameter}', function ($parameter) {
