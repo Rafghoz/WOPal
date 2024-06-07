@@ -19,78 +19,100 @@
 @section('content')
 <aside class="single_sidebar_widget search_widget">
     <div class="input-group">
-        <input type="text" class="form-control" placeholder="Search Posts" onfocus="this.placeholder = ''"
-            onblur="this.placeholder = 'Search Posts'">
+        <input type="text" class="form-control" id="searchInput" placeholder="Pencarian WO" onfocus="this.placeholder = ''"
+            onblur="this.placeholder = 'Pencarian WO'">
         <span class="input-group-btn">
             <button class="btn btn-default" type="button"><i class="lnr lnr-magnifier"></i></button>
         </span>
-    </div><!-- /input-group -->
-    <div class="br"></div>
+    </div>
 </aside>
 <section class="cart_area">
-    <div class="container">
+    <div class="container" id="containerTailor">
         <div class="col-12">
-            <div id="card-Wo">
-
-            </div>
-            
+            {{-- <div class="card" id="card-WO">
+                    <a href="" id="link">
+                    <div class="card-body text-center">
+                        <img src="" id="profileWopal" class="rounded-circle mb-3" alt="Profile Image" style="width: 100px; height: 100px;">
+                        <h5 class="NamaWopal">Nama Wedding</h5>
+                        <p class="alamat">Alamat Wedding</p>
+                    </div>
+                </a>
+                </div> --}}
         </div>
     </div>
 </section>
 @endsection
 
 @section('script')
-    <script>
-        $(document).ready(function() {
-            const formatRupiah = (nilai) => {
-                return "Rp " + nilai.toLocaleString('id-ID');
-            }
+<script>
+    $.ajax({
+        type: "get",
+        url: "{{ url('api/v1/Wopal') }}",
+        dataType: "json",
+        success: function(response) {
+            $(document).ready(function() {
+                const containerTailor = $("#containerTailor");
 
-            $.ajax({
-                type: "GET",
-                url: "{{ url('api/v1/packages/get/wo') }}",
-                dataType: "json",
-                success: function(response) {
-                    console.log(response);
+                // Empty the container element initially
+                containerTailor.empty();
 
-                    // Kosongkan kontainer sebelum menambahkan data
-                    $(".card-Wo").empty();
+                $.each(response.data, function(index, data) {
+                    console.log("Data:", data);
 
-                    if (response.code === 200) {
-                        $.each(response.data, function(index, data) {
-                            console.log(data); // Tambahkan console.log untuk memeriksa data
+                    // Create a new card element
+                    const card = $(`
+            <div class="card" id="card-WO">
+                <a id="link" href="/detail-WO/${data.id}">
+                    <div class="card-body">
+                        <img src="uploads/wopal_profile/${data.img_wopal}" class="rounded-circle mb-3 profileWopal" alt="Profile Image">
+                        <div>
+                            <h5 class="card-title">${data.nama_wopal}</h5>
+                            <p class="card-text">${data.alamat}</p>
+                        </div>
+                    </div>
+                </a>
+            </div><hr>
+                    `);
 
-                            const html = `
-                        
-                            <div class="single-product">
-                                <img class="img-fluid" src="{{ asset('uploads/packages') }}/${data.gmb_paket}" alt="">
-                                <div class="d-flex flex-row gap-2 align-items-center p-2">
-        <img src="{{ asset('uploads/wopal_profile') }}/${data.wopal.img_wopal}" alt="profile" class="rounded-circle" style="width: 50px; height: 50px;">
-    </div>
-                                <div class="product-details">
-                                    <h6>${data.wopal.nama_wopal}</h6>
-                                    <h6>${data.nama_paket}</h6>
-                                    <p>${data.deskrisi}</p>
-                                    <div class="price">
-                                        <h6>${formatRupiah(data.harga)}</h6>
-                                    </div>
+                    // Append the updated card to the container
+                    containerTailor.append(card);
+                });
+
+                const searchInput = $("#searchInput");
+
+                searchInput.on("input", function() {
+                    var searchTerm = searchInput.val().toLowerCase();
+
+                    // Filter data based on the search term
+                    var filteredData = response.data.filter(function(item) {
+                        return item.nama_wopal.toLowerCase().includes(searchTerm) || item.alamat.toLowerCase().includes(searchTerm);
+                    });
+
+                    // Empty the container before adding the filtered data
+                    containerTailor.empty();
+
+                    // Display the filtered data
+                    $.each(filteredData, function(index, item) {
+                        var card = $(`
+                            <div class="card">
+                                <a id="link" href="/detail-WO/${item.id}">
+                                <div class="card-body text-center">
+                                    <img src="uploads/wopal_profile/${item.img_wopal}" class="rounded-circle mb-3 profileWopal" alt="Profile Image" style="width: 100px; height: 100px;">
+                                    <h5 class="NamaWopal">${item.nama_wopal}</h5>
+                                    <p class="alamat">${item.alamat}</p>
                                 </div>
+                                </a>
                             </div>
-                    `;
+                        `);
 
-                            // Tambahkan elemen HTML ke dalam kontainer
-                            $(".card-Wo").append(html);
-                        });
-                    } else {
-                        console.error("Failed to get data: ", response.message);
-                    }
-
-                },
-                error: function(error) {
-                    console.log("Failed to get data from the server", error);
-                }
+                        containerTailor.append(card);
+                    });
+                });
             });
-
-        });
-    </script>
+        },
+        error: function() {
+            console.log("Failed to get data from the server");
+        }
+    });
+</script>
 @endsection
