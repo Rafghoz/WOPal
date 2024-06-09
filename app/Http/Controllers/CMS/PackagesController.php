@@ -40,8 +40,9 @@ class PackagesController extends Controller
         }
     }
 
-    public function getAllDataByWO()
-    {
+public function getAllDataByWO()
+{
+    try {
         $user = Auth::user();
         if ($user->role == 'admin') {
             $data = $this->packagesModel::with('wopal')->where('id_user', $user->id)->get();
@@ -51,14 +52,22 @@ class PackagesController extends Controller
                 'data' => $data
             ]);
         } else {
-            $data = $this->packagesModel::with('wopal')->get(); // Adjusted to eager load 'wopal' relationship
+            $data = $this->packagesModel::with('wopal')->get();
             return response()->json([
                 'code' => 200,
                 'message' => 'success',
                 'data' => $data
             ]);
         }
+    } catch (\Exception $e) {
+        return response()->json([
+            'code' => 500,
+            'message' => 'Failed to get data from the server',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
+
     
     
     
@@ -106,14 +115,20 @@ class PackagesController extends Controller
         ], $messages);
     
         try {
-            // $user = Auth::user();
+            $user = Auth::user();
+
+            // Ensure the user has a related WopalModel
+            if (!$user->wo) {
+                throw new \Exception('User does not have a WopalModel associated.');
+            }
+
             $data = new PackagesModel();
             $data->nama_paket = htmlspecialchars($request->input('nama_paket'));
             $data->harga = htmlspecialchars($request->input('harga'));
             $data->deskrisi = htmlspecialchars($request->input('deskrisi'));
-            $data->id_wedding = $request->input('id_wedding');
+            $data->id_wedding = $user->wo->id; // Assign id_wo (id from WopalModel)
             // $data->id_user = $user->id;
-    
+
             if ($request->hasFile('gmb_paket')) {
                 $file = $request->file('gmb_paket');
                 $extension = $file->getClientOriginalExtension();
@@ -122,9 +137,9 @@ class PackagesController extends Controller
                 $file->move(public_path('uploads/packages'), $filename);
                 $data->gmb_paket = $filename;
             }
-    
+
             $data->save();
-    
+
             return response()->json([
                 'success' => true,
                 'data' => $data
@@ -137,6 +152,7 @@ class PackagesController extends Controller
             ], 400);
         }
     }
+    
     
 
     public function updateData(Request $request, $id)
@@ -205,7 +221,7 @@ class PackagesController extends Controller
 
     public function getDataById($id)
     {
-        $data = $this->packagesModel::where('id', $id)->first();
+        $data = $this->packagesModel::with('wopal')->where('id', $id)->first();
         if (!$data) {
             return response()->json([
                     'code' => 404,
@@ -214,8 +230,9 @@ class PackagesController extends Controller
         } else {
             return response()->json([
                 'status' => 'success',
+                'code' => 200,
                 'data' => $data,
-            ], 200);
+            ]);
         };
     }
 

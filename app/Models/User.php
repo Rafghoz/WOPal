@@ -26,5 +26,11 @@ class User extends Authenticatable
         'role',
         'created_at', 'updated_at',
     ];
+
+    public function wo()
+    {
+        return $this->hasOne(WopalModel::class, 'id_user');
+    }
+
 }
 

@@ -76,6 +76,8 @@
             <div class="modal-body">
                 <form id="formData" method="POST" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="id_wedding" id="id_wedding" value="{{ Auth::user()->wo->id }}">
+                    <input type="hidden" name="id_user" id="id_user" value="{{ Auth::user()->id }}">
                     <input type="hidden" name="id" id="id" value="">
                     <img src="" id="preview-add" class="mx-auto d-block pb-2"
                         style="max-width: 200px; haight: 50px; padding-top: 23px;">
@@ -134,36 +136,36 @@
 
 
         function fetchData() {
-            $.ajax({
-                type: "GET",
-                url: "{{ url('api/v1/packages') }}",
-                dataType: "json",
-                success: function (response) {
-                    console.log(response)
-                        let tableBody = '';
-                        $.each(response.data, function (index, data) {
-                            tableBody += "<tr>";
-                            tableBody += "<td>" + (index + 1) + "</td>";
-                            tableBody += "<td>" + data.nama_paket + "</td>";
-                            tableBody += "<td>" + formatRupiah(data.harga) + "</td>";
-                            tableBody += "<td><a class='openModal text-primary' data-image='" + data.gmb_paket +
-                            "'><i class='far fa-eye d-flex text-lg justify-content-center'></i></a></td>";
-                            tableBody += "<td>" + data.deskrisi + "</td>";
-                            tableBody += "<td>" +
-                                "<button type='button' class='btn btn-primary btn-edit' data-toggle='modal' data-target='#Modal' data-id='" +
-                                data.id + "'>" +
-                                "<i class='fa fa-edit'></i></button> " +
-                                "<button type='button' class='btn btn-danger btn-delete' data-id='" +
-                                data.id + "'>" +
-                                "<i class='fa fa-trash'></i></button>" +
-                                "</td>";
-                            tableBody += "</tr>";
-                        });
-    
-                        dataTable.clear().draw();
-                        dataTable.rows.add($(tableBody)).draw();
+    $.ajax({
+        type: "GET",
+        url: "{{ url('/v1/packages') }}",
+        dataType: "json",
+        success: function (response) {
+            console.log(response);
+            let tableBody = '';
+            $.each(response.data, function (index, data) {
+                tableBody += "<tr>";
+                tableBody += "<td>" + (index + 1) + "</td>";
+                tableBody += "<td>" + data.nama_paket + "</td>";
+                tableBody += "<td>" + formatRupiah(data.harga) + "</td>";
+                tableBody += "<td><a class='openModal text-primary' data-image='" + data.gmb_paket +
+                    "'><i class='far fa-eye d-flex text-lg justify-content-center'></i></a></td>";
+                tableBody += "<td>" + data.deskrisi + "</td>";
+                tableBody += "<td>" +
+                    "<button type='button' class='btn btn-primary btn-edit' data-toggle='modal' data-target='#Modal' data-id='" +
+                    data.id + "'>" +
+                    "<i class='fa fa-edit'></i></button> " +
+                    "<button type='button' class='btn btn-danger btn-delete' data-id='" +
+                    data.id + "'>" +
+                    "<i class='fa fa-trash'></i></button>" +
+                    "</td>";
+                tableBody += "</tr>";
+            });
 
-                        $(".openModal").on('click', function () {
+            dataTable.clear().draw();
+            dataTable.rows.add($(tableBody)).draw();
+
+            $(".openModal").on('click', function () {
                 var imgSrc = $(this).data('image');
                 if (imgSrc) {
                     // Set src for image preview in modal
@@ -175,13 +177,18 @@
                     console.error("Image source not found");
                 }
             });
-                    
-                },
-                error: function () {
-                    console.log("Failed to get data from the server");
-                }
-            });
+
+        },
+        error: function (error) {
+            console.log("Failed to get data from the server");
+            console.log(error); // Log the actual error for debugging
         }
+    });
+}
+
+// Fetch data on page load
+// fetchData();
+
     
         // Fetch data on page load
         fetchData();
@@ -250,23 +257,7 @@
         }
 
 
-        // showTable(); // Load table data on page load
-
-        function formatRupiah(angka) {
-            let numberString = angka.toString();
-            let split = numberString.split('.');
-            let sisa = split[0].length % 3;
-            let rupiah = split[0].substr(0, sisa);
-            let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-            if (ribuan) {
-                let separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
-            }
-
-            rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
-            return 'Rp. ' + rupiah;
-        }
+        // showTable(); // Load table data on page loa
 
 
         $('#harga_display').on('input', function () {

@@ -169,7 +169,7 @@
                 });
             }
     
-            let url = id ? 'http://127.0.0.1:8000/api/v1/auth/updateData/' + id : 'http://127.0.0.1:8000/api/v1/auth/createData';
+            let url = id ? 'http://127.0.0.1:8000/api/v1/auth/updateData/' + id : 'http://127.0.0.1:8000/api/v1/auth/createDataAdmin';
             if (id) {
                 formData.delete('id');
             }
