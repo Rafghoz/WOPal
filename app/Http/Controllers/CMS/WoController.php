@@ -22,24 +22,30 @@ class WoController extends Controller
 
     public function getAllData()
     {
-        // $user = Auth::user();
-        // if ($user->role == 'admin') {
-        //     $data = $this->WopalModel::where('id_user', $user->id)->get();
-        //                 return response()->json([
-        //     'status' => 'success',
-        //     'data' => $data,
-        // ], 200);
-        // } else {
+        $user = Auth::user();
+        if ($user->role == 'admin') {
+            $data = $this->WopalModel::where('id_user', $user->id)->get();
+                        return response()->json([
+            'status' => 'success',
+            'data' => $data,
+        ], 200);
+        } else {
             $data = $this->WopalModel::all();
             return response()->json([
                 'status' => 'success',
                 'data' => $data,
             ], 200);
-        // }
+        }
     }
 
     public function createData(Request $request)
     {
+        if (!Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User is not authenticated.'
+            ], 401);
+        }
         // Mendefinisikan pesan error kustom
         $messages = [
             'nama_wopal.required' => 'Nama WO harus diisi.',
@@ -81,6 +87,7 @@ class WoController extends Controller
 
         try {
     
+            $user = Auth::user();
             $data = new $this->WopalModel;
             $data->nama_wopal = htmlspecialchars($request->input('nama_wopal'));
             $data->alamat = htmlspecialchars($request->input('alamat'));
@@ -88,7 +95,7 @@ class WoController extends Controller
             $data->email = htmlspecialchars($request->input('email'));
             $data->img_wopal = htmlspecialchars($request->input('img_wopal'));
             $data->deskripsi = htmlspecialchars($request->input('deskripsi'));
-            // $data->id_user = $user;
+            $data->id_user = $user->id;
     
             if ($request->hasFile('img_wopal')) {
                 $file = $request->file('img_wopal');
@@ -113,9 +120,6 @@ class WoController extends Controller
             ], 400);
         }
     }
-
-    
-  
 
     public function updateData(Request $request, $id)
     {
@@ -147,7 +151,7 @@ class WoController extends Controller
             'no_hp' => 'required|string|max:20',
             'email' => 'required|email|max:255',
             'deskripsi' => 'required|string',
-            'img_wopal' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validasi untuk gambar
+            'img_wopal' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validasi untuk gambar
         ], $messages);
     
         // Check if the validation fails
@@ -210,17 +214,25 @@ class WoController extends Controller
 
     
 
-    // public function getDataByUser()
-    // {
-    //     $user = Auth::user();
-    //     if ($user->role == 'user') {
-    //         $data = $this->WopalModel::where('id_user' , $user->id)->get();
-    //         return $this->success($data);
-    //     }else{
-    //         $data = $this->WopalModel::all();
-    //         return $this->success($data);
-    //     }
-    // }
+    public function getDataByUser()
+    {
+        $user = Auth::user();
+        if ($user->role == 'admin') {
+            $data = $this->WopalModel::where('id_user' , $user->id)->get();
+            return response()->json([
+                'status' => 'success',
+                'data' => $data,
+                'code' => 200,
+            ]);
+        }else{
+            $data = $this->WopalModel::all();
+            return response()->json([
+                'status' => 'success',
+                'data' => $data,
+                'code' => 200,
+            ]);
+        }
+    }
 
     public function getDataById($id)
     {

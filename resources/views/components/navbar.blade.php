@@ -55,14 +55,17 @@
                 </button>
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
-                    <ul class="nav navbar-nav menu_nav ml-auto">
-                        <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/WO">Wedding Organizer</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/AboutUs">Tentang Kami</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/Bergabung">Bergabung</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/login">Log in</a></li>
+                    <ul class="nav navbar-nav menu_nav ml-auto" id="menuNav">
+                        <li class="nav-item {{ request()->is('/') ? 'active' : '' }}"><a class="nav-link" href="/">Home</a></li>
+                        <li class="nav-item {{ request()->is('WO') ? 'active' : '' }}"><a class="nav-link" href="/WO">Wedding Organizer</a></li>
+                        <li class="nav-item {{ request()->is('AboutUs') ? 'active' : '' }}"><a class="nav-link" href="/AboutUs">Tentang Kami</a></li>
+                        <li class="nav-item {{ request()->is('Bergabung') ? 'active' : '' }}"><a class="nav-link" href="/Bergabung">Bergabung</a></li>
                         
+                            <li class="nav-item {{ request()->is('login') ? 'active' : '' }}" id="authLink"><a class="nav-link" href="/login">Log in</a></li>
                     </ul>
+                    
+                    
+                    
                     <ul class="nav navbar-nav navbar-right">
                         <li class="nav-item">
                             <button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
@@ -82,3 +85,4 @@
         </div>
     </div>
 </header>
+

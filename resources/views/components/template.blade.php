@@ -15,7 +15,7 @@
     <!-- meta character set -->
     <meta charset="UTF-8">
     <!-- Site Title -->
-    <title>Karma Shop</title>
+    <title>Wopal</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!--CSS============================================= -->
@@ -31,6 +31,7 @@
     <link href="{{ asset('UI/css/main.css') }}" rel="stylesheet">
     <link href="{{ asset('UI/css/themify-icons.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
 </head>
 
@@ -80,6 +81,23 @@
     {{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script> --}}
     <script src="{{ asset('UI/js/gmaps.min.js') }}"></script>
     <script src="{{ asset('UI/js/main.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <Script>
+        document.addEventListener("DOMContentLoaded", function() {
+        // Simulasi pengecekan status login pengguna
+        // Gantilah ini dengan logika sebenarnya untuk memeriksa apakah pengguna sudah login atau belum
+        var isLoggedIn = false; // Misalnya, nilai ini diambil dari server atau local storage
+        
+        var authLink = document.getElementById("authLink");
+        var menuNav = document.getElementById("navbarSupportedContent");
+    
+        if (isLoggedIn) {
+            authLink.innerHTML = '<a class="nav-link" href="/logout">Log out</a>';
+        } else {
+            authLink.innerHTML = '<a class="nav-link" href="/login">Log in</a>';
+        }
+    });
+    </Script>
     @yield('script')
 
 </body>

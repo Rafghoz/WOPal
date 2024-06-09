@@ -188,12 +188,15 @@
                 icon: 'success',
                 timer: 5000,
                 showConfirmButton: true
-            });
+            }).then(() => {
+                        window.location.href = '/Dashboard';
+                    });
 
             // Reset form and error messages
             $('#Form-data')[0].reset();
             $('.error-text').text('');
-            $('#preview-image').attr('src', ''); // Reset preview image if any
+            $('#preview-image').attr('src', '');
+             // Reset preview image if any
         },
         error: function (xhr, status, error) {
             handleError(xhr);

@@ -1,64 +1,85 @@
 <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
       <div class="sidebar-brand-icon">
-        {{-- <img src="img/logo/logo2.png"> --}}
+          {{-- <img src="img/logo/logo2.png"> --}}
       </div>
       <div class="sidebar-brand-text mx-3">RuangAdmin</div>
-    </a>
-    <hr class="sidebar-divider my-0">
-    <li class="nav-item <?php echo ($currentPage == 'Dashboard') ? 'active' : ''; ?>">
-      <a class="nav-link" href="/">
-        <i class="fas fa-fw fa-tachometer-alt"></i>
-        <span>Dashboard</span></a>
-    </li>
-    <hr class="sidebar-divider">
-    <div class="sidebar-heading">
+  </a>
+  <hr class="sidebar-divider my-0">
+  <li class="nav-item {{ $currentPage == 'Dashboard' ? 'active' : '' }}">
+      <a class="nav-link" href="/Dashboard">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Dashboard</span>
+      </a>
+  </li>
+  <hr class="sidebar-divider">
+  <div class="sidebar-heading">
       Features
-    </div>
-    <li class="nav-item <?php echo ($currentPage == 'Daftar-WO') ? 'active' : ''; ?>">
+  </div>
+  @if (auth()->user()->role == 'super_admin')
+  <li class="nav-item {{ $currentPage == 'Daftar-WO' ? 'active' : '' }}">
       <a class="nav-link" href="/Daftar-WO">
-        <i class="fas fa-fw fa-building"></i>
-        <span>Daftar WO</span>
+          <i class="fas fa-fw fa-building"></i>
+          <span>Daftar WO</span>
       </a>
-    </li>
-    <li class="nav-item <?php echo ($currentPage == 'Bookings') ? 'active' : ''; ?>">
+  </li>
+  @endif
+  <li class="nav-item {{ $currentPage == 'Bookings' ? 'active' : '' }}">
       <a class="nav-link" href="/Bookings">
-        <i class="fas fa-fw fa-book"></i>
-        <span>Bookings</span>
+          <i class="fas fa-fw fa-book"></i>
+          <span>Bookings</span>
       </a>
-    </li>
-    <li class="nav-item <?php echo ($currentPage == 'Packages') ? 'active' : ''; ?>">
+  </li>
+  <li class="nav-item {{ $currentPage == 'Packages' ? 'active' : '' }}">
       <a class="nav-link" href="/Packages">
-        <i class="fas fa-fw fa-box"></i>
-        <span>Packages</span>
+          <i class="fas fa-fw fa-box"></i>
+          <span>Packages</span>
       </a>
-    </li>
-    <li class="nav-item <?php echo ($currentPage == 'Profile') ? 'active' : ''; ?>">
+  </li>
+  {{-- <li class="nav-item {{ $currentPage == 'Profile' ? 'active' : '' }}">
       <a class="nav-link" href="/Profile">
-        <i class="fas fa-fw fa-user"></i>
-        <span>Profile</span>
+          <i class="fas fa-fw fa-user"></i>
+          <span>Profile</span>
       </a>
-    </li>
-
-    <li class="nav-item <?php echo ($currentPage == 'Wedding-Organizer') ? 'active' : ''; ?>">
+  </li>
+  <li class="nav-item {{ $currentPage == 'Wedding-Organizer' ? 'active' : '' }}">
       <a class="nav-link" href="/Wedding-Organizer">
-        <i class="fas fa-fw fa-building"></i>
-        <span>Profile WO</span>
+          <i class="fas fa-fw fa-building"></i>
+          <span>Profile WO</span>
       </a>
-    </li>
-    <li class="nav-item <?php echo ($currentPage == 'usermanagement') ? 'active' : ''; ?>">
+  </li> --}}
+
+  @php
+  $user = auth()->user();
+  $hasWoData = $user->wo()->exists() && $user->role == 'admin';
+  $woIds = $hasWoData ? $user->wo()->pluck('id')->toArray() : [];
+@endphp
+
+  @if ($hasWoData)
+  <li class="nav-item <?php echo ($currentPage == 'Edit-WO') ? 'active' : ''; ?>">
+      <a class="nav-link" href="/Edit-WO">
+          <i class="fas fa-fw fa-building"></i>
+          <span>Edit WO</span>
+      </a>
+  </li>
+@else
+  <li class="nav-item <?php echo ($currentPage == 'Create-WO') ? 'active' : ''; ?>">
+      <a class="nav-link" href="/Create-WO">
+          <i class="fas fa-fw fa-building"></i>
+          <span>Create WO</span>
+      </a>
+  </li>
+@endif
+  
+  @if (auth()->user()->role == 'super_admin')
+  <li class="nav-item {{ $currentPage == 'usermanagement' ? 'active' : '' }}">
       <a class="nav-link" href="/cms/usermanagement">
-        <i class="fas fa-fw fa-users"></i>
-        <span>User Manajement</span>
+          <i class="fas fa-fw fa-users"></i>
+          <span>User Management</span>
       </a>
-    </li>
-    <li class="nav-item <?php echo ($currentPage == '') ? 'active' : ''; ?>">
-      <a class="nav-link" href="">
-        <i class="fas fa-fw fa-sign-out-alt"></i>
-        <span>Logout</span>
-      </a>
-    </li>
-    
-    <hr class="sidebar-divider">
-    <div class="version" id="version-ruangadmin"></div>
-  </ul>
+  </li>
+  @endif
+  
+  <hr class="sidebar-divider">
+  <div class="version" id="version-ruangadmin"></div>
+</ul>

@@ -37,6 +37,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\TrackVisitor::class,
+            // \App\Http\Middleware\RoleMiddleware::class,
         ],
 
         'api' => [
@@ -66,4 +67,10 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
+
+    // protected $routeMiddleware = [
+    //     // Other middleware
+    //     'redirect.authenticated' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+    // ];
+    
 }

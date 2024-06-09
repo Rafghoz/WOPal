@@ -27,7 +27,7 @@
     </div>
 </aside>
 <section class="cart_area">
-    <div class="container" id="containerTailor">
+    <div class="container" id="containerWo">
         <div class="col-12">
             {{-- <div class="card" id="card-WO">
                     <a href="" id="link">
@@ -51,10 +51,10 @@
         dataType: "json",
         success: function(response) {
             $(document).ready(function() {
-                const containerTailor = $("#containerTailor");
+                const containerWo = $("#containerWo");
 
                 // Empty the container element initially
-                containerTailor.empty();
+                containerWo.empty();
 
                 $.each(response.data, function(index, data) {
                     console.log("Data:", data);
@@ -75,7 +75,7 @@
                     `);
 
                     // Append the updated card to the container
-                    containerTailor.append(card);
+                    containerWo.append(card);
                 });
 
                 const searchInput = $("#searchInput");
@@ -89,7 +89,7 @@
                     });
 
                     // Empty the container before adding the filtered data
-                    containerTailor.empty();
+                    containerWo.empty();
 
                     // Display the filtered data
                     $.each(filteredData, function(index, item) {
@@ -105,7 +105,7 @@
                             </div>
                         `);
 
-                        containerTailor.append(card);
+                        containerWo.append(card);
                     });
                 });
             });
