@@ -22,20 +22,20 @@ class WoController extends Controller
 
     public function getAllData()
     {
-        $user = Auth::user();
-        if ($user->role == 'admin') {
-            $data = $this->WopalModel::where('id_user', $user->id)->get();
-                        return response()->json([
-            'status' => 'success',
-            'data' => $data,
-        ], 200);
-        } else {
+        // $user = Auth::user();
+        // if ($user->role == 'admin') {
+        //     $data = $this->WopalModel::where('id_user', $user->id)->get();
+        //                 return response()->json([
+        //     'status' => 'success',
+        //     'data' => $data,
+        // ], 200);
+        // } else {
             $data = $this->WopalModel::all();
             return response()->json([
                 'status' => 'success',
                 'data' => $data,
             ], 200);
-        }
+        // }
     }
 
     public function createData(Request $request)
@@ -54,9 +54,8 @@ class WoController extends Controller
             'alamat.required' => 'Alamat harus diisi.',
             'alamat.string' => 'Alamat harus berupa teks.',
             'alamat.max' => 'Alamat tidak boleh lebih dari 255 karakter.',
-            'no_hp.required' => 'Nomor telepon harus diisi.',
-            'no_hp.string' => 'Nomor telepon harus berupa teks.',
-            'no_hp.max' => 'Nomor telepon tidak boleh lebih dari 20 karakter.',
+            'no_hp.regex' => 'Nomor HP harus berupa angka dan valid.',
+            'no_hp.required' => 'Nomor HP harus diisi.',
             'email.required' => 'Email harus diisi.',
             'email.email' => 'Email harus berupa alamat email yang valid.',
             'email.max' => 'Email tidak boleh lebih dari 255 karakter.',
@@ -71,7 +70,7 @@ class WoController extends Controller
         $validator = Validator::make($request->all(), [
             'nama_wopal' => 'required|string|max:255',
             'alamat' => 'required|string|max:255',
-            'no_hp' => 'required|string|max:20',
+            'no_hp' => ['required', 'regex:/^[0-9]+$/'],
             'email' => 'required|email|max:255',
             'deskripsi' => 'required|string',
             'img_wopal' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validasi untuk gambar
@@ -131,9 +130,8 @@ class WoController extends Controller
             'alamat.required' => 'Alamat harus diisi.',
             'alamat.string' => 'Alamat harus berupa teks.',
             'alamat.max' => 'Alamat tidak boleh lebih dari 255 karakter.',
-            'no_hp.required' => 'Nomor telepon harus diisi.',
-            'no_hp.string' => 'Nomor telepon harus berupa teks.',
-            'no_hp.max' => 'Nomor telepon tidak boleh lebih dari 20 karakter.',
+            'no_hp.regex' => 'Nomor HP harus berupa angka dan valid.',
+            'no_hp.required' => 'Nomor HP harus diisi.',
             'email.required' => 'Email harus diisi.',
             'email.email' => 'Email harus berupa alamat email yang valid.',
             'email.max' => 'Email tidak boleh lebih dari 255 karakter.',
@@ -148,7 +146,7 @@ class WoController extends Controller
         $validator = Validator::make($request->all(), [
             'nama_wopal' => 'required|string|max:255',
             'alamat' => 'required|string|max:255',
-            'no_hp' => 'required|string|max:20',
+            'no_hp' => ['required', 'regex:/^[0-9]+$/'],
             'email' => 'required|email|max:255',
             'deskripsi' => 'required|string',
             'img_wopal' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validasi untuk gambar

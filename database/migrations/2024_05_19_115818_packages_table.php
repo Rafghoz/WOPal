@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nama_paket');
             $table->integer('harga');
             $table->string('gmb_paket');
-            $table->text('deskrisi');
+            $table->text('deskripsi');
             $table->foreignId('id_wedding')->nullable()->constrained('tb_wopal');
             $table->timestamps();
         });

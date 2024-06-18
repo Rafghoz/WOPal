@@ -82,8 +82,8 @@
                     </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btn-send">Submit</button>
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-primary" id="btn-send">Simpan</button>
             </div>
         </form>
         </div>
@@ -102,7 +102,7 @@
             "lengthChange": false,
             "autoWidth": false,
             "language": {
-                "emptyTable": "No data available"
+                "emptyTable": "Data Kosong"
             }
         });
     
@@ -124,10 +124,10 @@
                             tableBody += "<td>" + data.no_hp + "</td>";
                             tableBody += "<td>" + data.role + "</td>";
                             tableBody += "<td>" +
-                                "<button type='button' class='btn btn-primary edit-modal' data-toggle='modal' data-target='#Modal' data-id='" +
+                                "<button type='button' class='btn btn-outline-primary edit-modal' data-toggle='modal' data-target='#Modal' data-id='" +
                                 data.id + "'>" +
                                 "<i class='fa fa-edit'></i></button> " +
-                                "<button type='button' class='btn btn-danger delete-confirm' data-id='" +
+                                "<button type='button' class='btn btn-outline-danger delete-confirm' data-id='" +
                                 data.id + "'>" +
                                 "<i class='fa fa-trash'></i></button>" +
                                 "</td>";

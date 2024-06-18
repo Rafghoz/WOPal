@@ -4,6 +4,7 @@ use App\Http\Controllers\CMS\AuthController;
 use App\Http\Controllers\CMS\PackagesController;
 use App\Http\Controllers\CMS\BookingController;
 use App\Http\Controllers\CMS\DashboardController;
+use App\Http\Controllers\CMS\RatingController;
 use App\Http\Controllers\CMS\WoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,9 +24,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/visitors/count', [DashboardController::class, 'getVisitorCount']);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::prefix('v1/rating')->controller(RatingController::class)->group(function () {
+        // Route::get('/{packageId}', 'getDataRating');
+        Route::post('/create', 'createRating');
+    });
+});
 
-Route::middleware(['auth', 'web'])->group(function () {
+Route::get('/v1/rating/{packageId}', [RatingController::class, 'getDataRating']);
+
+// Route::middleware(['auth', 'web'])->group(function () {
 
     Route::prefix('v1/Wopal')->group(function () {
         Route::get('/', [WoController::class, 'getAllData']);
@@ -43,7 +51,9 @@ Route::prefix('v1/packages')->controller(PackagesController::class)->group(funct
     Route::get('/get/wo', 'getAllDataByWO');
     Route::post('/update/{id}', 'updateData');
     Route::get('/get/wo/{id_wedding}', 'getDataPacketByWO');
+    Route::get('/paket', 'getDataPacket');
     Route::delete('/delete/{id}', 'deleteData');
+    Route::post('/ratings', 'storeRate');
 });
 Route::prefix('v1/bookings')->controller(BookingController::class)->group(function () {
     Route::get('/', 'getAllData');
@@ -64,5 +74,6 @@ Route::prefix('v1/auth')->controller(AuthController::class)->group(function () {
     Route::post('/login', 'login');
 });
 
-});
+
+// });
 

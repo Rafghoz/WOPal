@@ -27,7 +27,7 @@
                         <form class="row register_form" action="" method="post" id="registerForm" novalidate="novalidate">
                             @csrf
                             <div class="col-12 form-group">
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Username" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username'">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Nama Panjang" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Nama Panjang'">
                             </div>
                             <div class="col-12 form-group">
                                 <input type="email" class="form-control" id="email" name="email" placeholder="Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'">
@@ -59,65 +59,113 @@
 
 @section('script')
     <script>
-$(document).ready(function () {
-    $('#registerForm').on('submit', function (e) {
-        e.preventDefault();
+        $(document).ready(function () {
+            $('#registerForm').on('submit', function (e) {
+                e.preventDefault();
 
-        let formData = new FormData(this);
-
-        $.ajax({
-            type: 'POST',
-            url: "{{ url('api/v1/auth/createDataUser') }}",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                console.log(response);
-                if (response.success) {
-                    Swal.fire({
-                        title: 'Success',
-                        text: 'Data berhasil ditambahkan!',
-                        icon: 'success',
-                        timer: 2000,
-                        showConfirmButton: false
-                    }).then(function () {
-                        window.location.href = document.referrer;
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Error',
-                        text: response.message,
-                        icon: 'error',
-                        showConfirmButton: true
-                    });
+                // Validasi form sebelum mengirim data
+                if (!validateForm()) {
+                    return false;
                 }
-            },
-            error: function (xhr) {
-                console.log(xhr.responseText);
+
+                let formData = new FormData(this);
+
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ url('api/v1/auth/createDataUser') }}",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        console.log(response);
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Akun Berhasil di Buat',
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: true
+                            }).then(function () {
+                                window.location.href = document.referrer;
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: response.message,
+                                icon: 'error',
+                                showConfirmButton: true
+                            });
+                        }
+                    },
+                    error: function (xhr) {
+                        console.log(xhr.responseText);
+                        let errorMessage = 'Terjadi kesalahan saat mengirim data';
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            displayErrors(xhr.responseJSON.errors);
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: errorMessage,
+                                icon: 'error',
+                                showConfirmButton: true
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Toggle password visibility
+            $("#show_hide_password a").on('click', function (event) {
+                event.preventDefault();
+                if ($('#show_hide_password input').attr("type") == "password") {
+                    $('#show_hide_password input').attr('type', 'text');
+                    $('#show_hide_password i').removeClass("fa-eye-slash");
+                    $('#show_hide_password i').addClass("fa-eye");
+                } else {
+                    $('#show_hide_password input').attr('type', 'password');
+                    $('#show_hide_password i').removeClass("fa-eye");
+                    $('#show_hide_password i').addClass("fa-eye-slash");
+                }
+            });
+
+            // Function untuk validasi form
+            function validateForm() {
+                let isValid = true;
+
+                $('#registerForm input[required]').each(function () {
+                    if ($(this).val().trim() === '') {
+                        isValid = false;
+                        let fieldName = $(this).attr('name');
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Field ' + fieldName + ' tidak boleh kosong',
+                            icon: 'error',
+                            showConfirmButton: true
+                        });
+                        return false; // Menghentikan iterasi each
+                    }
+                });
+
+                return isValid;
+            }
+
+            // Function untuk menampilkan pesan error validasi
+            function displayErrors(errors) {
+                let errorMessage = '<ul>';
+                $.each(errors, function (key, value) {
+                    errorMessage += '<li>' + value + '</li>';
+                });
+                errorMessage += '</ul>';
+
                 Swal.fire({
                     title: 'Error',
-                    text: 'Terjadi kesalahan saat mengirim data',
+                    html: errorMessage,
                     icon: 'error',
                     showConfirmButton: true
                 });
             }
         });
-    });
-
-    // Toggle password visibility
-    $("#show_hide_password a").on('click', function (event) {
-        event.preventDefault();
-        if ($('#show_hide_password input').attr("type") == "password") {
-            $('#show_hide_password input').attr('type', 'text');
-            $('#show_hide_password i').removeClass("fa-eye-slash");
-            $('#show_hide_password i').addClass("fa-eye");
-        } else {
-            $('#show_hide_password input').attr('type', 'password');
-            $('#show_hide_password i').removeClass("fa-eye");
-            $('#show_hide_password i').addClass("fa-eye-slash");
-        }
-    });
-});
-
     </script>
 @endsection
+
+

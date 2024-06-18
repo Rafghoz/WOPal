@@ -47,6 +47,7 @@ class AuthController extends Controller
         } else {
             return response()->json([
                 'success' => true,
+                'code' => 200,
                 'data' => $data
             ]);
         }
@@ -56,14 +57,15 @@ class AuthController extends Controller
     {
         // Pesan-pesan validasi yang disesuaikan
         $messages = [
-            'name.required' => 'Nama harus diisi.',
-            'name.string' => 'Nama harus berupa teks.',
-            'name.max' => 'Nama tidak boleh lebih dari 255 karakter.',
+            'name.required' => 'Nama Panjang harus diisi.',
+            'name.string' => 'Nama Panjang harus berupa teks.',
+            'name.max' => 'Nama Panjang tidak boleh lebih dari 255 karakter.',
             'email.required' => 'Email harus diisi.',
-            'email.email' => 'Email harus valid.',
             'email.unique' => 'Email sudah digunakan.',
+            'alamat.required' => 'Alamat harus diisi',
             'alamat.string' => 'Alamat harus berupa teks.',
-            'no_hp.string' => 'Nomor HP harus berupa teks.',
+            'no_hp.required' => 'Nomor HP harus diisi.',
+            'no_hp.regex' => 'Nomor HP harus berupa angka dan valid.',
             'password.required' => 'Password harus diisi.',
             'password.string' => 'Password harus berupa teks.',
             'password.min' => 'Password minimal 8 karakter.',
@@ -73,8 +75,8 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'alamat' => 'nullable|string',
-            'no_hp' => 'nullable|string',
+            'alamat' => 'required|string',
+            'no_hp' => ['required', 'regex:/^[0-9]+$/'],
             'password' => 'required|string|min:8',
         ], $messages);
         
@@ -122,7 +124,8 @@ class AuthController extends Controller
         'email.email' => 'Email harus valid.',
         'email.unique' => 'Email sudah digunakan.',
         'alamat.string' => 'Alamat harus berupa teks.',
-        'no_hp.string' => 'Nomor HP harus berupa teks.',
+        'no_hp.regex' => 'Nomor HP harus berupa angka dan valid.',
+        'no_hp.required' => 'Nomor HP harus diisi.',
         'password.required' => 'Password harus diisi.',
         'password.string' => 'Password harus berupa teks.',
         'password.min' => 'Password minimal 8 karakter.',
@@ -133,7 +136,7 @@ class AuthController extends Controller
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email',
         'alamat' => 'nullable|string',
-        'no_hp' => 'nullable|string',
+        'no_hp' => ['required', 'regex:/^[0-9]+$/'],
         'password' => 'required|string|min:8',
     ], $messages);
     
@@ -170,10 +173,6 @@ class AuthController extends Controller
     }
 }
 
-    
-
-
-
     public function updateData(Request $request, $id)
     {
 // Pesan-pesan validasi yang disesuaikan
@@ -184,8 +183,10 @@ $messages = [
     'email.required' => 'Email harus diisi.',
     'email.email' => 'Email harus valid.',
     'email.unique' => 'Email sudah digunakan.',
+    'alamat.required' => 'Alamat harus diisi.',
     'alamat.string' => 'Alamat harus berupa teks.',
-    'no_hp.int' => 'Nomor HP harus berupa nomor.',
+    'no_hp.regex' => 'Nomor HP harus berupa angka dan valid.',
+    'no_hp.required' => 'Nomor HP harus diisi.',
     'password.string' => 'Password harus berupa teks.',
     'password.min' => 'Password minimal 8 karakter.',
 ];
@@ -194,8 +195,8 @@ $messages = [
 $validator = Validator::make($request->all(), [
     'name' => 'required|string|max:255',
     'email' => 'required|email|unique:users,email,'.$id,
-    'alamat' => 'nullable|string',
-    'no_hp' => 'nullable|int',
+    'alamat' => 'required|string',
+    'no_hp' => ['required', 'regex:/^[0-9]+$/'],
     'password' => 'nullable|string|min:8',
 ], $messages);
     
@@ -274,12 +275,21 @@ $validator = Validator::make($request->all(), [
 
     public function login(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ], [
+            'email.required' => 'Email tidak boleh kosong',
+            'email.email' => 'Format email tidak valid',
+            'password.required' => 'Password tidak boleh kosong',
+        ]);
+        
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
             // Authentication passed...
             $user = Auth::user();
-            // $token = $user->createToken('auth_token')->plainTextToken;
+            $token = $user->createToken('auth_token')->plainTextToken;
 
             // Determine redirect URL based on user role
             $redirect_url = '/';
@@ -291,16 +301,20 @@ $validator = Validator::make($request->all(), [
 
             return response()->json([
                 'code' => 200,
-                // 'access_token' => $token,
+                'access_token' => $token,
                 'redirect_url' => $redirect_url,
                 'message' => 'Logged in successfully',
             ]);
+        }else {
+            throw ValidationException::withMessages([
+                'email' => ['Email atau password tidak valid.'],
+            ]);
         }
 
-        return response()->json([
-            'code' => 401,
-            'message' => 'Invalid credentials',
-        ]);
+        // return response()->json([
+        //     'code' => 401,
+        //     'message' => 'Invalid credentials',
+        // ]);
     }
 
     public function logout(Request $request)
