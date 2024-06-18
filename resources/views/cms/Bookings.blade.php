@@ -30,7 +30,9 @@
                         <th>Paket</th>
                         <th>Harga</th>
                         <th>Gambar</th>
+                        @if (auth()->user()->role == 'admin')
                         <th>Action</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody id="tbody">
@@ -66,7 +68,9 @@
 @section('script')
 <script>
     $(document).ready(function () {
-        const url = 'http://127.0.0.1:8000/api/v1';
+        const url = 'http://127.0.0.1:8000/v1';
+
+        let userRole = "{{ auth()->user()->role }}";
 
         var dataTable = $("#tabelData").DataTable({
             "responsive": true,
@@ -98,10 +102,14 @@
                             tableBody += "<td>" + formatRupiah(data.package.harga) + "</td>";
                             tableBody += "<td><a class='openModal text-primary' data-image='" + data.package.gmb_paket +
                             "'><i class='far fa-eye d-flex text-lg justify-content-center'></i></a></td>";
+
+                            if (userRole === 'admin') {
                             tableBody += "<td>" +
-                                "<button type='button' class='btn btn-danger btn-delete' data-id='" + data.id + "'>" +
+                                "<button type='button' class='btn btn-outline-danger btn-delete' data-id='" + data.id + "'>" +
                                 "<i class='fa fa-trash'></i></button>" +
                                 "</td>";
+                            } 
+                            
                             tableBody += "</tr>";
                     
                 });
@@ -139,73 +147,6 @@
             // Fetch data on page load
             fetchData();
 
-
-        // $(document).ready(function () {
-        //     $('#gmb_paket').change(function () {
-        //         var fileInput = $(this)[0];
-        //         var imagePreview = $('#preview');
-        //         var file = fileInput.files[0];
-
-        //         if (file) {
-        //             var reader = new FileReader();
-
-        //             reader.onload = function (e) {
-        //                 imagePreview.attr('src', e.target.result);
-        //                 imagePreview.show();
-        //             };
-
-        //             reader.readAsDataURL(file);
-        //         } else {
-        //             imagePreview.hide();
-        //         }
-        //     });
-        // });
-
-        // $(document).ready(function () {
-        //     $('#gmb_paket').on('change', function () {
-        //         var fileName = $(this).val().split('\\').pop();
-        //         var maxLength = 30; // Panjang maksimal nama file yang diizinkan
-        //         fileName = cutFileName(fileName,
-        //             maxLength); // Panggil fungsi pembatas nama file
-        //         $(this).siblings('.custom-file-label').addClass("selected").html(fileName);
-
-        //         var reader = new FileReader();
-        //         reader.onload = function (e) {
-        //             $('#preview-add').attr('src', e.target.result);
-        //         }
-        //         reader.readAsDataURL(this.files[0]);
-        //     });
-        // });
-
-        // // Fungsi untuk memotong nama file yang terlalu panjang
-        // function cutFileName(fileName, maxLength) {
-        //     if (fileName.length > maxLength) {
-        //         return fileName.substring(0, maxLength) + '...';
-        //     } else {
-        //         return fileName;
-        //     }
-        // }
-
-
-        // function formatRupiah(angka) {
-        //     let numberString = angka.toString();
-        //     let split = numberString.split('.');
-        //     let sisa = split[0].length % 3;
-        //     let rupiah = split[0].substr(0, sisa);
-        //     let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-        //     if (ribuan) {
-        //         let separator = sisa ? '.' : '';
-        //         rupiah += separator + ribuan.join('.');
-        //     }
-
-        //     rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
-        //     return 'Rp. ' + rupiah;
-        // }
-
-
-        // // showTable(); // Load table data on page load
-
         function formatRupiah(angka) {
             let numberString = angka.toString();
             let split = numberString.split('.');
@@ -221,170 +162,6 @@
             rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
             return 'Rp. ' + rupiah;
         }
-
-
-        // $('#harga_display').on('input', function () {
-        //     var inputValue = $(this).val();
-
-        //     // Remove non-numeric characters except for periods
-        //     inputValue = inputValue.replace(/[^,\d]/g, '');
-
-        //     // If input value is not empty
-        //     if (inputValue !== '') {
-        //         // Convert input value to number
-        //         var numberValue = parseInt(inputValue.replace(/,/g, ''));
-
-        //         if (numberValue > MAX_PRICE) {
-        //             $('.harga_error').text('Harga tidak boleh melebihi 1 miliar');
-        //             $('#btn-send').attr('disabled', true); // Disable submit button
-        //             return;
-        //         } else {
-        //             $('.harga_error').text('');
-        //             $('#btn-send').attr('disabled', false); // Enable submit button
-        //         }
-
-        //         // Format the number to currency format
-        //         var formattedCurrency = formatRupiah(numberValue);
-
-        //         // Update the input value with formatted currency
-        //         $(this).val(formattedCurrency);
-
-        //         // Store the raw numeric value in the hidden input
-        //         $('#harga').val(numberValue);
-        //     } else {
-        //         $('#harga').val('');
-        //     }
-        // });
-
-
-        // $('#add-data').on('click', function () {
-        //     $('#formData').trigger("reset");
-        //     $('.error-text').text('');
-        //     $('#Modal').modal('show');
-        //     $('#btn-send').html('Submit Data');
-        //     $('.modal-title').html('Tambah Data');
-        //     $("#preview-add").attr("src", "");
-        //     $("#preview-add").css("display", "none"); // Hide the image
-        //     $('#gmb_paket').val(''); // Clear the file input
-        //     $('#package-label').text('Pilih file'); // Reset the file label
-        //     $('#id').val(''); // Clear the ID value
-
-        //     // Clear the package price inputs
-        //     $('#harga').val('');
-        //     $('#harga_display').val('');
-        //     $('#btn-send').attr('disabled', false); // Ensure submit button is enabled
-        // });
-
-
-        // $('#btn-send').click(function () {
-        //     let formData = new FormData($('#formData')[0]);
-        //     let id = $('#id').val();
-        //     let fileInput = $('#gmb_paket')[0];
-
-        //     // Clear previous errors
-        //     $('.error-text').text('');
-
-        //     // Save the selected image file in a variable to reuse if there are validation errors
-        //     let selectedImageFile = fileInput.files[0];
-        //     let reader = new FileReader();
-        //     reader.onload = function (e) {
-        //         $('#preview-add').attr('src', e.target.result);
-        //     }
-        //     if (selectedImageFile) {
-        //         reader.readAsDataURL(selectedImageFile);
-        //     }
-
-        //     function handleError(xhr) {
-        //         if (xhr.status === 422) { // Unprocessable Entity
-        //             let errors = xhr.responseJSON.errors;
-        //             for (let key in errors) {
-        //                 if (errors.hasOwnProperty(key)) {
-        //                     $('.' + key + '_error').text(errors[key][0]);
-        //                 }
-        //             }
-        //         } else {
-        //             console.error(xhr.responseText);
-        //         }
-        //     }
-        //     let url = id ? 'http://127.0.0.1:8000/api/v1/packages/update/' + id : 'http://127.0.0.1:8000/api/v1/packages/create';
-        //     if (id) {
-        //         formData.delete('id');
-        //     }
-    
-        //     $.ajax({
-        //         type: 'POST',
-        //         url: url,
-        //         data: formData,
-        //         processData: false,
-        //         contentType: false,
-        //         success: function (response) {
-        //             console.log(response);
-        //             $('#Modal').modal('hide');
-        //             fetchData();
-        //             Swal.fire({
-        //                 title: 'Success',
-        //                 text: id ? 'Data berhasil diupdate!' : 'Data berhasil ditambahkan!',
-        //                 icon: 'success',
-        //                 timer: 5000,
-        //                 showConfirmButton: true
-        //             }).then(function () {
-        //                 fetchData();
-        //                     // showTable();
-        //                     // window.location.reload();
-        //                 });;
-        //         },
-        //         error: function (xhr, status, error) {
-        //             handleError(xhr);
-        //         }
-        //     });
-
-        // });
-
-        // $(document).on('click', '.btn-edit', function (res) {
-        //     let id = $(this).data('id');
-        //     $('.error-text').text('');
-        //     console.log(id);
-        //     $(document).on('change', '#gmb_paket', function () {
-        //         var fileName = $(this).val().split('\\').pop();
-        //         $('#package-label').text(fileName);
-        //         if (this.files && this.files[0]) {
-        //             const fileEdit = this.files[0];
-        //             const reader = new FileReader();
-
-        //             reader.onload = function (e) {
-        //                 // Display the image preview
-        //                 $("#preview-add").attr("src", e.target.result);
-        //             };
-
-        //             reader.readAsDataURL(fileEdit);
-        //         }
-
-        //     });
-        //     $.ajax({
-        //         url: url + "/packages/get/" + id,
-        //         type: 'GET',
-        //         dataType: 'JSON',
-        //         success: function (data) {
-        //             console.log(data);
-        //             $('#id').val(data.data.id);
-        //             $('#nama_paket').val(data.data.nama_paket);
-        //             $('#harga').val(data.data.harga);
-        //             $('#harga_display').val(formatRupiah(data.data.harga));
-        //             $('#deskrisi').val(data.data.deskrisi);
-        //             $('#package-label').text(data.data.gmb_paket);
-        //             // $('#package-image').html(data.data.gmb_paket);
-        //             $('#Modal').modal('show');
-        //             $('#btn-send').html('Update Data');
-        //             $('.modal-title').html('Edit Data');
-        //             $("#preview-add").attr('src', "{{ asset('uploads/packages/') }}/" + data.data.gmb_paket);
-
-        //             $("#preview-add").css("display", "block"); // Display the image
-        //         },
-        //         error: function (xhr, status, error) {
-        //             console.error(xhr.dataText);
-        //         }
-        //     });
-        // });
 
         $(document).on('click', '.btn-delete', function (e) {
             e.preventDefault();

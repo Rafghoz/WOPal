@@ -28,7 +28,10 @@
                         <th>Harga Paket</th>
                         <th>Gambar Paket</th>
                         <th>Deskripsi</th>
+                        @if (auth()->user()->role == 'admin')
                         <th>Action</th>
+                        @endif
+                        
                     </tr>
                 </thead>
                 <tbody id="tbody">
@@ -76,27 +79,24 @@
             <div class="modal-body">
                 <form id="formData" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="id_wedding" id="id_wedding" value="{{ Auth::user()->wo->id }}">
-                    <input type="hidden" name="id_user" id="id_user" value="{{ Auth::user()->id }}">
+                    {{-- <input type="hidden" name="id_wedding" id="id_wedding" value="{{ Auth::user()->wo->id }}">
+                    <input type="hidden" name="id_user" id="id_user" value="{{ Auth::user()->id }}"> --}}
                     <input type="hidden" name="id" id="id" value="">
                     <img src="" id="preview-add" class="mx-auto d-block pb-2"
                         style="max-width: 200px; haight: 50px; padding-top: 23px;">
                     <div class="form-group">
                         <label for="nama_paket">Package Name</label>
                         <input type="text" class="form-control" id="nama_paket" name="nama_paket" required>
-                        <span class="text-danger error-text nama_paket_error"></span>
                     </div>
                     <div class="form-group">
                         <label for="harga">Package Price</label>
                         <input type="text" class="form-control" id="harga_display" required>
                         <input type="hidden" id="harga" name="harga">
-                        <span class="text-danger error-text harga_error"></span>
                     </div>
 
                     <div class="form-group">
-                        <label for="deskrisi">Deskripsi</label>
-                        <textarea class="form-control" name="deskrisi" id="deskrisi"></textarea>
-                        <span class="text-danger error-text deskrisi_error"></span>
+                        <label for="deskripsi">Deskripsi</label>
+                        <textarea class="form-control" name="deskripsi" id="deskripsi"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="gmb_paket">package Image</label>
@@ -105,13 +105,12 @@
                                 accept="image/*">
                             <label class="custom-file-label" for="gmb_paket" id="package-label">Pilih file</label>
                         </div>
-                        <span class="text-danger error-text gmb_paket_error"></span>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-outline-primary" id="btn-send">Submit Data</button>
+                <button type="submit" class="btn btn-outline-primary" id="btn-send">Simpan</button>
             </div>
         </div>
     </div>
@@ -121,7 +120,7 @@
 @section('script')
 <script>
     $(document).ready(function () {
-        const url = 'http://127.0.0.1:8000/api/v1';
+        const url = 'http://127.0.0.1:8000/v1';
 
         const MAX_PRICE = 1000000000; // 1 billion
 
@@ -134,11 +133,21 @@
             }
         });
 
+        let userRole = "{{ auth()->user()->role }}"; // Pastikan ini memberikan nilai yang diharapkan
 
-        function fetchData() {
+if (userRole === 'admin') {
+    requestUrl = url + "/packages/paket";
+} else if (userRole === 'super_admin') {
+    requestUrl = url + "/packages";
+} else {
+    console.error("Invalid user role:", userRole); // Tambahkan log untuk memeriksa nilai userRole
+    return;
+}
+
+function fetchData() {
     $.ajax({
         type: "GET",
-        url: "{{ url('/v1/packages') }}",
+        url: requestUrl,
         dataType: "json",
         success: function (response) {
             console.log(response);
@@ -150,15 +159,21 @@
                 tableBody += "<td>" + formatRupiah(data.harga) + "</td>";
                 tableBody += "<td><a class='openModal text-primary' data-image='" + data.gmb_paket +
                     "'><i class='far fa-eye d-flex text-lg justify-content-center'></i></a></td>";
-                tableBody += "<td>" + data.deskrisi + "</td>";
-                tableBody += "<td>" +
-                    "<button type='button' class='btn btn-primary btn-edit' data-toggle='modal' data-target='#Modal' data-id='" +
-                    data.id + "'>" +
-                    "<i class='fa fa-edit'></i></button> " +
-                    "<button type='button' class='btn btn-danger btn-delete' data-id='" +
-                    data.id + "'>" +
-                    "<i class='fa fa-trash'></i></button>" +
-                    "</td>";
+                tableBody += "<td>" + data.deskripsi + "</td>";
+
+                // Check user role and add corresponding action buttons
+                if (userRole === 'admin') {
+                    // Only display edit and delete buttons for admin
+                    tableBody += "<td>" +
+                        "<button type='button' class='btn btn-outline-primary btn-edit' data-toggle='modal' data-target='#Modal' data-id='" +
+                        data.id + "'>" +
+                        "<i class='fa fa-edit'></i></button> " +
+                        "<button type='button' class='btn btn-outline-danger btn-delete' data-id='" +
+                        data.id + "'>" +
+                        "<i class='fa fa-trash'></i></button>" +
+                        "</td>";
+                } 
+
                 tableBody += "</tr>";
             });
 
@@ -168,10 +183,7 @@
             $(".openModal").on('click', function () {
                 var imgSrc = $(this).data('image');
                 if (imgSrc) {
-                    // Set src for image preview in modal
                     $("#previewImage").attr('src', "{{ asset('uploads/packages/') }}/" + imgSrc);
-
-                    // Show the modal
                     $('#imageModal').modal('show');
                 } else {
                     console.error("Image source not found");
@@ -185,6 +197,7 @@
         }
     });
 }
+
 
 // Fetch data on page load
 // fetchData();
@@ -318,9 +331,6 @@
             let id = $('#id').val();
             let fileInput = $('#gmb_paket')[0];
 
-            // Clear previous errors
-            $('.error-text').text('');
-
             // Save the selected image file in a variable to reuse if there are validation errors
             let selectedImageFile = fileInput.files[0];
             let reader = new FileReader();
@@ -331,19 +341,7 @@
                 reader.readAsDataURL(selectedImageFile);
             }
 
-            function handleError(xhr) {
-                if (xhr.status === 422) { // Unprocessable Entity
-                    let errors = xhr.responseJSON.errors;
-                    for (let key in errors) {
-                        if (errors.hasOwnProperty(key)) {
-                            $('.' + key + '_error').text(errors[key][0]);
-                        }
-                    }
-                } else {
-                    console.error(xhr.responseText);
-                }
-            }
-            let url = id ? 'http://127.0.0.1:8000/api/v1/packages/update/' + id : 'http://127.0.0.1:8000/api/v1/packages/create';
+            let url = id ? 'http://127.0.0.1:8000/v1/packages/update/' + id : 'http://127.0.0.1:8000/v1/packages/create';
             if (id) {
                 formData.delete('id');
             }
@@ -370,9 +368,28 @@
                             // window.location.reload();
                         });;
                 },
-                error: function (xhr, status, error) {
-                    handleError(xhr);
-                }
+                error: function (xhr) {
+            console.error('Error updating data: ' + xhr.responseText);
+            
+            // Parse validation errors
+            let errorText = '';
+            if (xhr.responseJSON && xhr.responseJSON.errors) {
+                let errors = xhr.responseJSON.errors;
+                Object.keys(errors).forEach(function(key) {
+                    errorText += `${errors[key][0]}<br>`;
+                });
+            } else {
+                errorText = 'Failed to update data. Please try again later.';
+            }
+
+            Swal.fire({
+                title: 'Error',
+                html: errorText,
+                icon: 'error',
+                timer: 5000,
+                showConfirmButton: true
+            });
+        }
             });
 
         });
@@ -407,7 +424,7 @@
                     $('#nama_paket').val(data.data.nama_paket);
                     $('#harga').val(data.data.harga);
                     $('#harga_display').val(formatRupiah(data.data.harga));
-                    $('#deskrisi').val(data.data.deskrisi);
+                    $('#deskripsi').val(data.data.deskripsi);
                     $('#package-label').text(data.data.gmb_paket);
                     // $('#package-image').html(data.data.gmb_paket);
                     $('#Modal').modal('show');

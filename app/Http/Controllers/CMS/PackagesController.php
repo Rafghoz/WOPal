@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\CMS;
 
 use App\Models\PackagesModel;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -68,7 +69,33 @@ public function getAllDataByWO()
     }
 }
 
-    
+public function getDataPacket()
+{
+    try {
+
+        $user = Auth::user()->id;
+        // Ambil data paket berdasarkan user id
+        $data = packagesModel::with('wopal')->whereHas('wopal', function($query) use ($user) {
+            $query->where('id_user', $user);
+        })->get();
+
+        if ($data->isEmpty()) {
+            return response()->json([
+                'message' => 'Data not found'
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ]);
+    } catch (\Throwable $th) {
+        return response()->json([
+            'error' => $th->getMessage()
+        ], 500);
+    }
+}
+
     
     
     public function getDataPacketByWO($id_wedding)
@@ -99,8 +126,8 @@ public function getAllDataByWO()
         'harga.required' => 'Harga paket harus diisi.',
         'harga.numeric' => 'Harga paket harus berupa angka.',
         'harga.min' => 'Harga paket tidak boleh kurang dari 0.',
-        'deskrisi.required' => 'Deskripsi harus diisi.',
-        'deskrisi.string' => 'Deskripsi harus berupa teks.',
+        'deskripsi.required' => 'Deskripsi harus diisi.',
+        'deskripsi.string' => 'Deskripsi harus berupa teks.',
         'gmb_paket.required' => 'Gambar paket harus diunggah.',
         'gmb_paket.image' => 'File harus berupa gambar.',
         'gmb_paket.mimes' => 'File harus berformat jpeg, png dan jpg',
@@ -110,7 +137,7 @@ public function getAllDataByWO()
         $request->validate([
             'nama_paket' => 'required|string|max:255',
             'harga' => 'required|numeric|min:0',
-            'deskrisi' => 'required|string',
+            'deskripsi' => 'required|string',
             'gmb_paket' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi untuk gambar
         ], $messages);
     
@@ -125,7 +152,7 @@ public function getAllDataByWO()
             $data = new PackagesModel();
             $data->nama_paket = htmlspecialchars($request->input('nama_paket'));
             $data->harga = htmlspecialchars($request->input('harga'));
-            $data->deskrisi = htmlspecialchars($request->input('deskrisi'));
+            $data->deskripsi = htmlspecialchars($request->input('deskripsi'));
             $data->id_wedding = $user->wo->id; // Assign id_wo (id from WopalModel)
             // $data->id_user = $user->id;
 
@@ -165,8 +192,8 @@ public function getAllDataByWO()
             'harga.required' => 'Harga paket harus diisi.',
             'harga.numeric' => 'Harga paket harus berupa angka.',
             'harga.min' => 'Harga paket tidak boleh kurang dari 0.',
-            'deskrisi.required' => 'Deskripsi harus diisi.',
-            'deskrisi.string' => 'Deskripsi harus berupa teks.',
+            'deskripsi.required' => 'Deskripsi harus diisi.',
+            'deskripsi.string' => 'Deskripsi harus berupa teks.',
             'gmb_paket.image' => 'File harus berupa gambar.',
             'gmb_paket.mimes' => 'File harus berformat jpeg, png dan jpg.',
             'gmb_paket.max' => 'Ukuran file tidak boleh lebih dari 2048 KB.',
@@ -176,7 +203,7 @@ public function getAllDataByWO()
         $request->validate([
             'nama_paket' => 'required|string|max:255',
             'harga' => 'required|numeric|min:0',
-            'deskrisi' => 'required|string',
+            'deskripsi' => 'required|string',
             'gmb_paket' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], $messages);
     
@@ -192,7 +219,7 @@ public function getAllDataByWO()
     
             $data->nama_paket = htmlspecialchars($request->input('nama_paket'));
             $data->harga = htmlspecialchars($request->input('harga'));
-            $data->deskrisi = htmlspecialchars($request->input('deskrisi'));
+            $data->deskripsi = htmlspecialchars($request->input('deskripsi'));
     
             // Check if a new image file is uploaded
             if ($request->hasFile('gmb_paket')) {
@@ -260,5 +287,9 @@ public function getAllDataByWO()
     }
     
 
+
+
+    
+    
 
 }

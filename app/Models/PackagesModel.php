@@ -14,7 +14,7 @@ class PackagesModel extends Model
         'nama_paket',
         'harga',
         'gmb_paket',
-        'deskrisi',
+        'deskripsi',
         'id_wedding',
         'id_user',
         'created_at',
@@ -25,5 +25,8 @@ class PackagesModel extends Model
     {
         return $this->belongsTo(WopalModel::class, 'id_wedding');
     }
-    
+    public function ratings()
+    {
+        return $this->hasMany(RatingModel::class);
+    }
 }

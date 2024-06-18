@@ -4,7 +4,7 @@
     <h1 class="h3 mb-0 text-gray-800">Profile Wedding Organizer</h1>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="./">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Profile</li>
+        <li class="breadcrumb-item active" aria-current="page">Profile Wedding Organizer</li>
     </ol>
 </div>
 @endsection
@@ -14,7 +14,7 @@
     <!-- Form Basic -->
     <div class="card mb-4">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-            <h6 class="m-0 font-weight-bold text-primary">Account Information</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Profile Wedding Organizer</h6>
         </div>
         <div class="card-body">
             <div class="row">
@@ -25,7 +25,6 @@
                             <img src="" class="avatar img-circle img-thumbnail" id="preview-image" alt="avatar">
         
                             <h6 class="mt-2">Upload a different photo...</h6>
-                            <span class="text-danger error-text img_wopal-error"></span>
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input" id="img_wopal" name="img_wopal" accept="image/*">
                                 <label class="custom-file-label" for="img_wopal" id="package-label">Pilih file</label>
@@ -41,35 +40,30 @@
                         <label for="nama_wopal" class="col-sm-3 col-form-label">Name WO</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="nama_wopal" id="nama_wopal" placeholder="Name WO">
-                            <span class="text-danger error-text nama_wopal-error"></span>
                         </div>
                     </div>
                     <div class="form-group row ml-3">
                         <label for="alamat" class="col-sm-3 col-form-label">Alamat</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="alamat" id="alamat" placeholder="Alamat">
-                            <span class="text-danger error-text alamat-error"></span>
                         </div>
                     </div>
                     <div class="form-group row ml-3">
                         <label for="no_hp" class="col-sm-3 col-form-label">Kontak</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="no_hp" id="no_hp" placeholder="Kontak">
-                            <span class="text-danger error-text no_hp-error"></span>
                         </div>
                     </div>
                     <div class="form-group row ml-3">
                         <label for="email" class="col-sm-3 col-form-label">Email</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="email" id="email" placeholder="email">
-                            <span class="text-danger error-text email-error"></span>
                         </div>
                     </div>
                     <div class="form-group row ml-3">
                         <label for="deskripsi" class="col-sm-3 col-form-label">Deskripsi</label>
                         <div class="col-sm-9">
                             <textarea class="form-control" name="deskripsi" id="deskripsi"></textarea>
-                            <span class="text-danger error-text deskripsi-error"></span>
                         </div>
                     </div>
                     <div class="form-group row ml-3">
@@ -79,9 +73,10 @@
     $hasWoData = $user->wo()->exists() && $user->role == 'admin';
     $woId = $hasWoData ? $user->wo()->first()->id : null;
 @endphp
-                            <button type="button" class="btn btn-outline-primary" id="btn-send" data-id="{{ $woId }}"
-                            >Edit Data</button>
-                            <button type="reset" class="btn btn-outline-danger" id="btn-reset">Reset</button>
+                            <button type="button" class="btn btn-outline-primary" id="btn-send" data-id="{{ $woId }}">
+                                Edit Data</button>
+                            <button type="button" class="btn btn-outline-danger" id="btn-delete" data-id="{{ $woId }}">
+                                Hapus</button>
                         </div>
                     </div>
                     </form>
@@ -97,7 +92,7 @@
 @section('script')
 <script>
     $(document).ready(function () {
-        const url = 'http://127.0.0.1:8000/api/v1';
+        const url = 'http://127.0.0.1:8000/v1';
 
 
 
@@ -158,32 +153,6 @@
         $('#btn-send').click(function () {
             let formData = new FormData($('#Form-data')[0]);
             let woId = $(this).data('id');
-            $('.error-text').text('');
-
-            function handleError(xhr) {
-                console.error(xhr.responseText);
-
-                if (xhr.responseJSON.errors) {
-                    let errors = xhr.responseJSON.errors;
-
-                    if (errors.nama_wopal) {
-                        $('.nama_wopal-error').text(errors.nama_wopal[0]);
-                    }
-                    if (errors.alamat) {
-                        $('.alamat-error').text(errors.alamat[0]);
-                    }
-                    if (errors.no_hp) {
-                        $('.no_hp-error').text(errors.no_hp[0]);
-                    }
-                    if (errors.email) {
-                        $('.email-error').text(errors.email[0]);
-                    }
-                    if (errors.deskripsi) {
-                        $('.deskripsi-error').text(errors.deskripsi[0]);
-                    }
-                    
-                }
-            }
 
             $.ajax({
                 type: 'POST',
@@ -204,11 +173,84 @@
                     });
 
                 },
-                error: function (xhr, status, error) {
-                    handleError(xhr);
-                }
+                error: function (xhr) {
+            console.error('Error updating data: ' + xhr.responseText);
+            
+            // Parse validation errors
+            let errorText = '';
+            if (xhr.responseJSON && xhr.responseJSON.errors) {
+                let errors = xhr.responseJSON.errors;
+                Object.keys(errors).forEach(function(key) {
+                    errorText += `${errors[key][0]}<br>`;
+                });
+            } else {
+                errorText = 'Failed to update data. Please try again later.';
+            }
+
+            Swal.fire({
+                title: 'Error',
+                html: errorText,
+                icon: 'error',
+                timer: 5000,
+                showConfirmButton: true
+            });
+        }
             });
         });
+
+        $('#btn-delete').click(function (e) {
+        e.preventDefault();
+        let woId = $(this).data('id');
+        Swal.fire({
+            title: 'Hapus ?',
+            text: 'Anda tidak dapat mengembalikan ini',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Delete',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "DELETE",
+                    url: url + '/Wopal/delete/' + woId,
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        "id": woId
+                    },
+                    success: function (response) {
+                        if (response.message === 'Failed') {
+                            Swal.fire({
+                                title: 'Gagal menghapus data',
+                                text: response.message,
+                                icon: 'error',
+                                timer: 5000,
+                                showConfirmButton: true
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Data berhasil dihapus',
+                                icon: 'success',
+                                timer: 5000,
+                                showConfirmButton: true
+                            }).then(function () {
+                                window.location.href = "/Dashboard";
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Terjadi kesalahan',
+                            icon: 'error',
+                            timer: 5000,
+                            showConfirmButton: true
+                        });
+                    }
+                });
+            }
+        });
+    });
 
     function cutFileName(fileName, maxLength) {
         if (fileName && fileName.length > maxLength) {

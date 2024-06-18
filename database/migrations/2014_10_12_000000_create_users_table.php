@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email');
-            $table->timestamp('email_verified_at')->nullable()->comment('Waktu verifikasi email');
             $table->string('password');
             $table->string('alamat');
             $table->string('no_hp', 20); // Panjang maksimum nomor hp disetel ke 20 karakter

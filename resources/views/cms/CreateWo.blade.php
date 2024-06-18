@@ -4,7 +4,7 @@
     <h1 class="h3 mb-0 text-gray-800">Profile Wedding Organizer</h1>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="./">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Profile</li>
+        <li class="breadcrumb-item active" aria-current="page">Profile Wedding Organizer</li>
     </ol>
 </div>
 @endsection
@@ -14,7 +14,7 @@
     <!-- Form Basic -->
     <div class="card mb-4">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-            <h6 class="m-0 font-weight-bold text-primary">Account Information</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Profile Wedding Organizer</h6>
         </div>
         <div class="card-body">
             <div class="row">
@@ -76,8 +76,7 @@
                     </div>
                     <div class="form-group row ml-3">
                         <div class="col-sm-12 text-right">
-                            <button type="button" class="btn btn-outline-primary" id="btn-send">Tambah Data</button>
-                            <button type="reset" class="btn btn-outline-danger" id="btn-reset">Reset</button>
+                            <button type="button" class="btn btn-outline-primary" id="btn-send">Simpan</button>
                         </div>
                     </div>
                     </form>
@@ -92,7 +91,7 @@
 @section('script')
 <script>
     $(document).ready(function () {
-        const url = 'http://127.0.0.1:8000/api/v1';
+        const url = 'http://127.0.0.1:8000/v1';
 
         // Fungsi untuk memotong nama file gambar jika terlalu panjang
         function cutFileNameFromDatabase(fileName, maxLength) {

@@ -18,14 +18,15 @@
 
                     <div class="card_area d-flex align-items-center">
                         @if (auth()->check())
-    @if (auth()->user()->role == 'user')
-        <a class="primary-btn" href="#" id="link">Booking</a>
-    @else
-    <a class="primary-btn" href="#" id="link" style="pointer-events: none; opacity: 0.6;">Booking</a>
-    @endif
-@else
-    <a class="primary-btn" href="{{ route('register') }}">Booking</a>
-@endif
+                        @if (auth()->user()->role == 'user')
+                        <a class="primary-btn" href="#" id="link">Booking</a>
+                        @else
+                        <a class="primary-btn" href="#" id="link"
+                            style="pointer-events: none; opacity: 0.6;">Booking</a>
+                        @endif
+                        @else
+                        <a class="primary-btn" href="{{ route('login') }}">Perlu Log In</a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -36,159 +37,83 @@
 <section class="product_description_area">
     <div class="container">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
-
             <li class="nav-item">
                 <a class="nav-link active" id="review-tab" data-toggle="tab" href="#review" role="tab"
-                    aria-controls="review" aria-selected="false">Reviews</a>
+                    aria-controls="review" aria-selected="true">Reviews</a>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
                 <div class="row">
                     <div class="col-lg-6">
-                        <div class="row total_rate">
-                            <div class="col-6">
-                                <div class="box_total">
-                                    <h5>Overall</h5>
-                                    <h4>4.0</h4>
-                                    <h6>(03 Reviews)</h6>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="rating_list">
-                                    <h3>Based on 3 Reviews</h3>
-                                    <ul class="list">
-                                        <li><a href="#">5 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i
-                                                    class="fa fa-star"></i><i class="fa fa-star"></i><i
-                                                    class="fa fa-star"></i> 01</a></li>
-                                        <li><a href="#">4 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i
-                                                    class="fa fa-star"></i><i class="fa fa-star"></i><i
-                                                    class="fa fa-star"></i> 01</a></li>
-                                        <li><a href="#">3 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i
-                                                    class="fa fa-star"></i><i class="fa fa-star"></i><i
-                                                    class="fa fa-star"></i> 01</a></li>
-                                        <li><a href="#">2 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i
-                                                    class="fa fa-star"></i><i class="fa fa-star"></i><i
-                                                    class="fa fa-star"></i> 01</a></li>
-                                        <li><a href="#">1 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i
-                                                    class="fa fa-star"></i><i class="fa fa-star"></i><i
-                                                    class="fa fa-star"></i> 01</a></li>
-                                    </ul>
-                                </div>
-                            </div>
+                        <div class="review_list" id="reviewList">
+                            <!-- Review items will be added dynamically -->
                         </div>
-                        {{-- <div class="review_list">
-                            <div class="review_item">
-                                <div class="media">
-                                    <div class="d-flex">
-                                        <img src="img/product/review-1.png" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <h4>Blake Ruiz</h4>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                </div>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                    commodo</p>
-                            </div>
-                            <div class="review_item">
-                                <div class="media">
-                                    <div class="d-flex">
-                                        <img src="img/product/review-2.png" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <h4>Blake Ruiz</h4>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                </div>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                    commodo</p>
-                            </div>
-                            <div class="review_item">
-                                <div class="media">
-                                    <div class="d-flex">
-                                        <img src="img/product/review-3.png" alt="">
-                                    </div>
-                                    <div class="media-body">
-                                        <h4>Blake Ruiz</h4>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                </div>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                                    commodo</p>
-                            </div>
-                        </div> --}}
                     </div>
                     <div class="col-lg-6">
                         <div class="review_box">
                             <h4>Add a Review</h4>
-                            <p>Your Rating:</p>
-                            <ul class="list">
-                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                            </ul>
-                            <p>Outstanding</p>
-                            <form class="row contact_form" action="contact_process.php" method="post" id="contactForm"
-                                novalidate="novalidate">
+                            <form class="row contact_form" id="reviewForm">
+                                @csrf
+                                @if (auth()->check())
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="name" name="name"
-                                            placeholder="Your Full name" onfocus="this.placeholder = ''"
-                                            onblur="this.placeholder = 'Your Full name'">
+                                        <input type="text" class="form-control" id="UserName"
+                                            placeholder="{{ Auth::user()->name }}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="email" class="form-control" id="email" name="email"
-                                            placeholder="Email Address" onfocus="this.placeholder = ''"
-                                            onblur="this.placeholder = 'Email Address'">
+                                        <input type="email" class="form-control" id="UserEmail"
+                                            placeholder="{{ Auth::user()->email }}" disabled>
+                                    </div>
+                                </div>
+                                @else
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="UserName" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="number" name="number"
-                                            placeholder="Phone Number" onfocus="this.placeholder = ''"
-                                            onblur="this.placeholder = 'Phone Number'">
+                                        <input type="email" class="form-control" id="UserEmail" disabled>
+                                    </div>
+                                </div>
+                                @endif
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="rating">
+                                            <i class="fa fa-star-o" data-rating="1"></i>
+                                            <i class="fa fa-star-o" data-rating="2"></i>
+                                            <i class="fa fa-star-o" data-rating="3"></i>
+                                            <i class="fa fa-star-o" data-rating="4"></i>
+                                            <i class="fa fa-star-o" data-rating="5"></i>
+                                        </div>
+                                        <input type="hidden" name="rating" id="rating">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <textarea class="form-control" name="message" id="message" rows="1"
-                                            placeholder="Review" onfocus="this.placeholder = ''"
-                                            onblur="this.placeholder = 'Review'"></textarea></textarea>
+                                        <textarea class="form-control" name="komentar" id="komentar" rows="5"
+                                            placeholder="Review"></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-12 text-right">
-                                    <button type="submit" value="submit" class="primary-btn">Submit Now</button>
+                                    @if (auth()->check())
+                                        <button type="submit" class="primary-btn">kirim</button>
+                                    @else
+                                        <button type="button" class="primary-btn" id="submitAlert">kirim</button>
+                                    @endif
                                 </div>
                             </form>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 </section>
-
-<!-- The rest of your HTML remains unchanged -->
 
 <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -205,24 +130,14 @@
                     <input type="hidden" name="id" id="id" value="">
                     <div class="form-group">
                         <label for="name">Nama</label>
-                        <input class="form-control" name="nama" id="nama" 
-                        @auth
-                            value="{{ auth()->user()->name }}"
-                            readonly
-                            @endauth
-                            
-                            disabled>
+                        <input class="form-control" name="nama" id="nama" @auth value="{{ auth()->user()->name }}"
+                            readonly @endauth disabled>
                         <span class="text-danger error-text nama_error"></span>
                     </div>
                     <div class="form-group">
                         <label for="name">Kontak</label>
-                        <input class="form-control" name="no_hp" id="no_hp" 
-                        @auth
-                            value="{{ auth()->user()->no_hp }}"
-                            readonly
-                            @endauth
-                            
-                            disabled>
+                        <input class="form-control" name="no_hp" id="no_hp" @auth value="{{ auth()->user()->no_hp }}"
+                            readonly @endauth disabled>
                         <span class="text-danger error-text no_hp_error"></span>
                     </div>
                     <div class="form-group">
@@ -255,121 +170,135 @@
 @section('script')
 <script>
     $(document).ready(function () {
-        const url = 'http://127.0.0.1:8000/';
-        
-        const formatRupiah = (nilai) => {
-            return "Rp " + nilai.toLocaleString('id-ID');
-        }
+    const url = 'http://127.0.0.1:8000/';
 
-        const path = location.pathname;
-        const pathSegments = path.split('/');
-        const productId = pathSegments[2];
+    const formatRupiah = (nilai) => {
+        return "Rp " + nilai.toLocaleString('id-ID');
+    }
 
-        $.ajax({
-            type: "GET",
-            url: `{{ url('api/v1/packages/get/') }}/${productId}`,
-            dataType: "json",
-            success: function (response) {
-                console.log(response);
+    const path = location.pathname;
+    const pathSegments = path.split('/');
+    const productId = pathSegments[2];
 
-                if (response.code === 200) {
-                    const item = response.data;
+    $.ajax({
+    type: "GET",
+    url: `{{ url('api/v1/packages/get/') }}/${productId}`,
+    dataType: "json",
+    success: function (response) {
+        console.log(response);
 
-                    $('.namaPak').text(item.nama_paket);
-                    $('#gmbPaket').attr('src', `${url}uploads/packages/${item.gmb_paket}`);
-                    $('.harga').text(formatRupiah(item.harga));
-                    $('.deskrip').text(item.deskrisi);
+        if (response.code === 200) {
+            const item = response.data;
 
-                    const whatsappLink = `https://wa.me/${item.wopal.no_hp}?text=${encodeURIComponent(`Hallo kak, saya tertarik dengan paket ${item.nama_paket}. Saya ingin Memboking.`)}&source=&data=${url + 'uploads/packages/' + item.gmb_paket}`;
+            $('.namaPak').text(item.nama_paket);
+            $('#gmbPaket').attr('src', `${url}uploads/packages/${item.gmb_paket}`);
+            $('.harga').text(formatRupiah(item.harga));
+            $('.deskrip').text(item.deskrisi);
 
-                    @if(auth()->check())
-                    $('#link').on('click', function () {
-                        $('#Modal').modal('show');
-                        $('#nama_paket').val(item.nama_paket);
+            @if(auth()->check())
+            $('#link').on('click', function () {
+                $('#Modal').modal('show');
+                $('#nama_paket').val(item.nama_paket);
+            });
+
+            $('#btn-send').on('click', function (e) {
+                e.preventDefault();
+
+                const nama = $('#nama').val();
+                const no_hp = $('#no_hp').val();
+                const tgl_nk = $('#tgl_nk').val();
+                const catatan = $('#catatan').val();
+
+                if (!nama || !no_hp || !tgl_nk || !catatan) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Silakan lengkapi semua field yang dibutuhkan',
+                        icon: 'error'
                     });
+                    return;
+                }
 
-                    $('#btn-send').on('click', function (e) {
-                    e.preventDefault();
+                const formData = {
+                    nama: nama,
+                    no_hp: no_hp,
+                    tgl_nk: tgl_nk,
+                    catatan: catatan,
+                    id_user: '{{ auth()->id() }}',
+                    id_package: item.id
+                };
 
-                    // Validate form fields
-                    const nama = $('#nama').val();
-                    const no_hp = $('#no_hp').val();
-                    const tgl_nk = $('#tgl_nk').val();
-                    const catatan = $('#catatan').val();
-
-                    if (!nama || !no_hp || !tgl_nk || !catatan) {
-                        Swal.fire({
-                            title: 'Error',
-                            text: 'Silakan lengkapi semua field yang dibutuhkan',
-                            icon: 'error'
-                        });
-                        return;
-                    }
-
-                    const formData = {
-                        nama: nama,
-                        no_hp: no_hp,
-                        tgl_nk: tgl_nk,
-                        catatan: catatan,
-                        id_user: '{{ auth()->id() }}', // Replace with actual user ID
-                        id_package: item.id
-                    };
-
-                    $.ajax({
-                        type: 'POST',
-                        url: `${url}api/v1/bookings/create`, // Adjust the URL as needed
-                        data: formData,
-                        success: function (response) {
-                            if (response.code === 200) {
-                                // Open WhatsApp link
-                                window.open(whatsappLink, '_blank');
-
-                                // Show SweetAlert notification after clicking "Pesan" button
-                                Swal.fire({
-                                    title: 'Terima kasih telah melakukan pemesanan!',
-                                    text: 'Bantu kami meningkatkan layanan dengan memberikan rating.',
-                                    icon: 'success',
-                                    confirmButtonText: 'Isi Rating',
-                                    cancelButtonText: 'Nanti',
-                                    showCancelButton: true,
-                                    reverseButtons: true
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        // Redirect to rating page
-                                        // window.location.href = '/rating-page'; // Adjust the URL as needed
-                                    }
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'Error',
-                                    text: response.message,
-                                    icon: 'error'
-                                });
+                $.ajax({
+                    type: 'POST',
+                    url: `${url}api/v1/bookings/create`,
+                    data: formData,
+                    success: function (response) {
+                        if (response.code === 200) {
+                            const phone = item.wopal.no_hp;
+                            const countryCode = '62'; // Indonesia country code
+                            let formattedPhone = phone;
+                            if (phone.startsWith('0')) {
+                                formattedPhone = countryCode + phone.substring(1);
                             }
-                        },
-                        error: function (xhr, status, error) {
-                            let errorMessage = 'An error occurred';
-                            if (xhr.responseJSON && xhr.responseJSON.errors) {
-                                errorMessage = Object.values(xhr.responseJSON.errors).map(error => error.join(', ')).join('\n');
-                            }
+
+                            const whatsappMessage = `Hallo kak, saya tertarik dengan paket ${item.nama_paket}. Saya ingin Membooking.\n\nTanggal Nikah: ${tgl_nk}\nCatatan: ${catatan}\n`;
+
+                            const whatsappLink = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(whatsappMessage)}`;
+
+                            window.open(whatsappLink, '_blank');
+
+                            $('#Modal').modal('hide');
                             Swal.fire({
-                                title: 'Validation Error',
-                                text: errorMessage,
+                                title: 'Terima kasih telah melakukan pemesanan!',
+                                text: 'Bantu kami meningkatkan layanan dengan memberikan rating.',
+                                icon: 'success',
+                                confirmButtonText: 'Isi Rating',
+                                cancelButtonText: 'Nanti',
+                                showCancelButton: true,
+                                reverseButtons: true
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Redirect to rating page
+                                    // window.location.href = '/rating-page'; // Adjust the URL as needed
+                                }
+                            });
+                            $('#tgl_nk').val('');
+                            $('#catatan').val('');
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: response.message,
                                 icon: 'error'
                             });
                         }
-                    });
+                    },
+                    error: function (xhr, status, error) {
+                        let errorMessage = 'An error occurred';
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            errorMessage = Object.values(xhr.responseJSON.errors).map(error => error.join(', ')).join('\n');
+                        }
+                        Swal.fire({
+                            title: 'Validation Error',
+                            text: errorMessage,
+                            icon: 'error'
+                        });
+                    }
                 });
-                    @endif
+            });
+            @endif
 
-                } else {
-                    console.error("Failed to get data: ", response.message);
-                }
-            },
-            error: function (error) {
-                console.log("Failed to get data from the server", error);
-            }
-        });
-    });
+        } else {
+            console.error("Failed to get data: ", response.message);
+        }
+    },
+    error: function (error) {
+        console.log("Failed to get data from the server", error);
+    }
+});
+
+
+
+});
+
 </script>
+
 @endsection

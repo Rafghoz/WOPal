@@ -21,4 +21,8 @@ class WopalModel extends Model
     {
         return $this->hasMany(PackagesModel::class, 'id_package');
     }
+    public function bookings()
+    {
+        return $this->hasMany(BookingModel::class, 'id_wopal');
+    }
 }

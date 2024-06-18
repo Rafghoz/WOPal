@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class BookingController extends Controller
@@ -23,7 +24,26 @@ class BookingController extends Controller
     public function getAllData()
     {
         try {
-            $data = $this->bookingModel::with('package', 'user')->get();
+            $user = Auth::user();
+            $role = $user->role;
+
+            if ($role === 'admin') {
+                // Ambil data booking berdasarkan user terautentikasi yang merupakan WO
+                $data = $this->bookingModel::with(['package', 'user'])
+                    ->whereHas('package', function ($query) use ($user) {
+                        $query->whereHas('wopal', function ($q) use ($user) {
+                            $q->where('id_user', $user->id);
+                        });
+                    })->get();
+            } elseif ($role === 'super_admin') {
+                // Ambil semua data booking
+                $data = $this->bookingModel::with(['package', 'user'])->get();
+            } else {
+                return response()->json([
+                    'code' => 403,
+                    'message' => 'Forbidden. You do not have permission to access this resource.'
+                ]);
+            }
 
             if ($data->isEmpty()) {
                 return response()->json([
@@ -33,19 +53,18 @@ class BookingController extends Controller
             } else {
                 return response()->json([
                     'code' => 200,
-                    'message' => 'success',
+                    'message' => 'Success',
                     'data' => $data
                 ]);
             }
         } catch (\Exception $e) {
             return response()->json([
                 'code' => 500,
-                'message' => $e
+                'message' => 'Failed to retrieve booking data: ' . $e->getMessage()
             ]);
         }
     }
     
-
     public function createData(Request $request)
     {
         $messages = [
@@ -100,8 +119,6 @@ class BookingController extends Controller
         ]);
     }
     
-    
-
     public function getDataById($id)
     {
         $data = $this->bookingModel::where('id', $id)->first();

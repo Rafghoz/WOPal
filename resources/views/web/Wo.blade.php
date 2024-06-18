@@ -61,7 +61,7 @@
 
                     // Create a new card element
                     const card = $(`
-            <div class="card" id="card-WO">
+            <div class="card-Wo" id="card-WO">
                 <a id="link" href="/detail-WO/${data.id}">
                     <div class="card-body">
                         <img src="uploads/wopal_profile/${data.img_wopal}" class="rounded-circle mb-3 profileWopal" alt="Profile Image">
@@ -93,17 +93,19 @@
 
                     // Display the filtered data
                     $.each(filteredData, function(index, item) {
-                        var card = $(`
-                            <div class="card">
-                                <a id="link" href="/detail-WO/${item.id}">
-                                <div class="card-body text-center">
-                                    <img src="uploads/wopal_profile/${item.img_wopal}" class="rounded-circle mb-3 profileWopal" alt="Profile Image" style="width: 100px; height: 100px;">
-                                    <h5 class="NamaWopal">${item.nama_wopal}</h5>
-                                    <p class="alamat">${item.alamat}</p>
-                                </div>
-                                </a>
-                            </div>
-                        `);
+                        const card = $(`
+            <div class="card-Wo" id="card-WO">
+                <a id="link" href="/detail-WO/${item.id}">
+                    <div class="card-body">
+                        <img src="uploads/wopal_profile/${item.img_wopal}" class="rounded-circle mb-3 profileWopal" alt="Profile Image">
+                        <div>
+                            <h5 class="card-title">${item.nama_wopal}</h5>
+                            <p class="card-text">${item.alamat}</p>
+                        </div>
+                    </div>
+                </a>
+            </div><hr>
+                    `);
 
                         containerWo.append(card);
                     });

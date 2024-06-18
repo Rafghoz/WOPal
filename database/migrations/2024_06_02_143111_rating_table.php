@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('ratings', function (Blueprint $table) {
             $table->id();
-            $table->string('rating');
-            $table->string('komentar');
-            $table->foreignId('id_wedding')->nullable()->constrained('tb_wopal');
+            $table->integer('rating'); // Pastikan tipe data integer
+            $table->string('komentar'); // Pastikan nama kolom sesuai dengan yang digunakan di model
+            $table->foreignId('id_package')->nullable()->constrained('tb_packages');
             $table->foreignId('id_user')->nullable()->constrained('users');
             $table->timestamps();
         });
